@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: productpay_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: product_pay_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d product_pay_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - productpay_net
+
+  productpay_backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: productpay_backend
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432/product_pay_db
+      - DIRECT_URL=postgresql://postgres:postgrespassword@postgres:5432/product_pay_db
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - productpay_net
+
+  productpay_frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: productpay_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - productpay_backend
+    networks:
+      - productpay_net
+
+networks:
+  productpay_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
