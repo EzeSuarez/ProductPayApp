@@ -99,7 +99,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
           </div>
 
           <div
-            className={`w-full flex items-center justify-between h-8.5 sm:h-9 rounded-full bg-zinc-800/90 border border-zinc-700/60 px-2 ${
+            className={`w-full flex items-center justify-between h-9 sm:h-10 rounded-full bg-zinc-800/90 border border-zinc-700/60 px-2 ${
               isOutOfStock ? 'opacity-40 pointer-events-none' : ''
             }`}
           >
@@ -141,7 +141,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
             aria-label={t.payWithCard}
             disabled={isOutOfStock}
             onClick={handleSelect}
-            className={`group/btn relative overflow-hidden w-full h-8.5 sm:h-9 px-3 rounded-full text-xs font-semibold tracking-tight transition-all duration-300 flex items-center justify-center gap-1.5 shadow-sm active:scale-95 active:bg-zinc-200 ${
+            className={`group/btn relative overflow-hidden w-full h-9 sm:h-10 px-3 rounded-full text-xs font-semibold tracking-tight transition-all duration-300 flex items-center justify-center gap-1.5 shadow-sm active:scale-95 active:bg-zinc-200 ${
               isOutOfStock
                 ? 'bg-zinc-800/50 text-zinc-500 border border-zinc-700/30 cursor-not-allowed'
                 : 'bg-zinc-100 text-zinc-950 hover:bg-white hover:scale-[1.02] hover:shadow-[0_0_22px_rgba(255,255,255,0.45)] cursor-pointer'
