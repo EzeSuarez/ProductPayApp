@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import {
   setStep,
@@ -54,6 +54,38 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
   const [personalAuthAccepted, setPersonalAuthAccepted] = useState(checkout.personalAuthAccepted);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    dispatch(
+      updateCustomer({
+        fullName,
+        email,
+        phoneNumber,
+        legalId,
+      })
+    );
+  }, [fullName, email, phoneNumber, legalId, dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      updateDelivery({
+        addressLine1,
+        addressLine2,
+        city,
+        region,
+        postalCode,
+      })
+    );
+  }, [addressLine1, addressLine2, city, region, postalCode, dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      setLegalAcceptance({
+        termsAccepted,
+        personalAuthAccepted,
+      })
+    );
+  }, [termsAccepted, personalAuthAccepted, dispatch]);
 
   if (!isOpen || !product) return null;
 
