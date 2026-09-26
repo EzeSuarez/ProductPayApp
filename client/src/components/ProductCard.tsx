@@ -98,10 +98,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Quantity Stepper: to the left of the buy button */}
+          {/* 50 / 50 Row: Quantity Stepper & Buy Button */}
+          <div className="flex items-center gap-2 w-full">
+            {/* Quantity Stepper (50% width) */}
             <div
-              className={`flex items-center h-8 sm:h-8.5 rounded-full bg-zinc-800/90 border border-zinc-700/60 px-1 shrink-0 ${
+              className={`flex-1 w-1/2 flex items-center justify-between h-8.5 sm:h-9 rounded-full bg-zinc-800/90 border border-zinc-700/60 px-2 sm:px-3 ${
                 isOutOfStock ? 'opacity-40 pointer-events-none' : ''
               }`}
             >
@@ -110,13 +111,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                 aria-label={t.decreaseQuantityAria}
                 disabled={isOutOfStock || quantity <= 1}
                 onClick={handleDecrease}
-                className="w-4.5 h-4.5 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-xs font-bold outline-none focus:outline-none focus:ring-0"
+                className="w-6 h-6 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
               >
                 −
               </button>
               <span
                 data-testid={`quantity-value-${product.id}`}
-                className="w-4 text-center text-xs font-mono font-semibold text-zinc-100 select-none"
+                className="text-xs font-mono font-semibold text-zinc-100 select-none px-1"
               >
                 {quantity}
               </span>
@@ -125,20 +126,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                 aria-label={t.increaseQuantityAria}
                 disabled={isOutOfStock || quantity >= product.stock}
                 onClick={handleIncrease}
-                className="w-4.5 h-4.5 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-xs font-bold outline-none focus:outline-none focus:ring-0"
+                className="w-6 h-6 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
               >
                 +
               </button>
             </div>
 
-            {/* Buy Button with Shimmer, Tilt, Glow & Click Effect */}
+            {/* Buy Button (50% width) */}
             <button
               id={`pay-button-${product.id}`}
               type="button"
               aria-label={t.payWithCard}
               disabled={isOutOfStock}
               onClick={handleSelect}
-              className={`group/btn relative overflow-hidden flex-1 h-8 sm:h-8.5 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-semibold tracking-tight transition-all duration-300 flex items-center justify-center gap-1 shadow-sm active:scale-90 active:bg-zinc-200 ${
+              className={`group/btn relative overflow-hidden flex-1 w-1/2 h-8.5 sm:h-9 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-semibold tracking-tight transition-all duration-300 flex items-center justify-center gap-1 shadow-sm active:scale-90 active:bg-zinc-200 ${
                 isOutOfStock
                   ? 'bg-zinc-800/50 text-zinc-500 border border-zinc-700/30 cursor-not-allowed'
                   : 'bg-zinc-100 text-zinc-950 hover:bg-white hover:scale-[1.03] hover:shadow-[0_0_22px_rgba(255,255,255,0.45)] cursor-pointer'
