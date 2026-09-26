@@ -1,0 +1,17 @@
+{
+  "name": "product-pay-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:server": "npm --prefix server run start:dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix server run build && npm --prefix client run build",
+    "test:server": "npm --prefix server run test",
+    "test:client": "npm --prefix client run test",
+    "test": "npm --prefix server run test && npm --prefix client run test",
+    "test:cov": "npm --prefix server run test:cov && npm --prefix client run test:cov",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f postgres"
+  }
+}
