@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CustomerData, DeliveryData, TransactionResult, TransactionStatus } from '../../types';
+import { CustomerData, DeliveryData, TransactionResult } from '../../types';
 
 export interface CheckoutState {
   currentStep: 1 | 2 | 3 | 4 | 5;

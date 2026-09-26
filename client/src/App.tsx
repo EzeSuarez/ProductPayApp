@@ -11,7 +11,6 @@ import {
   setProcessing,
   setTransactionResult,
   resetCheckout,
-  setError,
 } from './store/slices/checkoutSlice';
 import { Header } from './components/Header';
 import { ProductCard } from './components/ProductCard';

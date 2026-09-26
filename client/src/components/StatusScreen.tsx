@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
-import { setStep, resetCheckout } from '../store/slices/checkoutSlice';
+import { setStep } from '../store/slices/checkoutSlice';
 import { Product } from '../types';
 import { formatCurrencyCOP } from '../utils/cardValidation';
 

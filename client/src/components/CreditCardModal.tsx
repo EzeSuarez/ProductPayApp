@@ -307,7 +307,21 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                 {errors.addressLine1 && <p className="text-[10px] text-rose-400 mt-1">{errors.addressLine1}</p>}
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="delivery-address2" className="text-[11px] font-medium text-zinc-300 block mb-1">
+                  Address Line 2 (Optional)
+                </label>
+                <input
+                  id="delivery-address2"
+                  type="text"
+                  placeholder="Apto, Suite, Unidad"
+                  value={addressLine2}
+                  onChange={(e) => setAddressLine2(e.target.value)}
+                  className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label htmlFor="delivery-city" className="text-[11px] font-medium text-zinc-300 block mb-1">
                     City *
@@ -332,6 +346,19 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                     placeholder="Cundinamarca"
                     value={region}
                     onChange={(e) => setRegion(e.target.value)}
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="delivery-postalCode" className="text-[11px] font-medium text-zinc-300 block mb-1">
+                    Postal Code
+                  </label>
+                  <input
+                    id="delivery-postalCode"
+                    type="text"
+                    placeholder="110111"
+                    value={postalCode}
+                    onChange={(e) => setPostalCode(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
                   />
                 </div>
