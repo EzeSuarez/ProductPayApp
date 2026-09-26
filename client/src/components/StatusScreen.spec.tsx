@@ -5,6 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { StatusScreen } from './StatusScreen';
 import checkoutReducer from '../store/slices/checkoutSlice';
 import catalogReducer from '../store/slices/catalogSlice';
+import localeReducer from '../store/slices/localeSlice';
 import { Product, TransactionResult } from '../types';
 
 const renderWithStore = (
@@ -15,6 +16,7 @@ const renderWithStore = (
     reducer: {
       checkout: checkoutReducer,
       catalog: catalogReducer,
+      locale: localeReducer,
     },
     preloadedState: {
       checkout: {
@@ -61,7 +63,7 @@ describe('StatusScreen Component', () => {
     imageUrl: 'https://example.com/watch.jpg',
   };
 
-  it('should render APPROVED state with reference, tracking number and return button', () => {
+  it('should render APPROVED state in Spanish with reference, tracking number and return button', () => {
     const handleFinish = jest.fn();
     const approvedTx: TransactionResult = {
       id: 'tx-app-1',
@@ -75,11 +77,11 @@ describe('StatusScreen Component', () => {
       approvedTx
     );
 
-    expect(screen.getByText('Payment Successful')).toBeInTheDocument();
+    expect(screen.getByText(/Pago Exitoso/i)).toBeInTheDocument();
     expect(screen.getByText('TX-REF-APPROVED-99')).toBeInTheDocument();
-    expect(screen.getByText(/Tracking Number:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Número de Guía:/i)).toBeInTheDocument();
 
-    const returnBtn = screen.getByRole('button', { name: /Return to Store/i });
+    const returnBtn = screen.getByRole('button', { name: /Volver a la Tienda/i });
     fireEvent.click(returnBtn);
 
     expect(handleFinish).toHaveBeenCalledTimes(1);
@@ -100,12 +102,32 @@ describe('StatusScreen Component', () => {
       declinedTx
     );
 
-    expect(screen.getByText('Payment Declined')).toBeInTheDocument();
+    expect(screen.getByText('Pago Rechazado')).toBeInTheDocument();
     expect(screen.getByText('Card was declined by issuing bank')).toBeInTheDocument();
 
-    const retryBtn = screen.getByRole('button', { name: /Try Another Card/i });
+    const retryBtn = screen.getByRole('button', { name: /Intentar con Otra Tarjeta/i });
     fireEvent.click(retryBtn);
 
     expect(store.getState().checkout.currentStep).toBe(2);
+  });
+
+  it('should call onFinishCheckout when Back to Store is clicked in declined state', () => {
+    const handleFinish = jest.fn();
+    const declinedTx: TransactionResult = {
+      id: 'tx-dec-2',
+      reference: 'TX-REF-DECLINED-77',
+      status: 'DECLINED',
+      amountInCents: 216500000,
+    };
+
+    renderWithStore(
+      <StatusScreen product={mockProduct} onFinishCheckout={handleFinish} />,
+      declinedTx
+    );
+
+    const backBtn = screen.getByRole('button', { name: /Volver a la Tienda/i });
+    fireEvent.click(backBtn);
+
+    expect(handleFinish).toHaveBeenCalledTimes(1);
   });
 });

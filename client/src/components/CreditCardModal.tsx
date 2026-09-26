@@ -14,6 +14,7 @@ import {
   formatExpiry,
 } from '../utils/cardValidation';
 import { Product } from '../types';
+import { useTranslation } from '../i18n/useTranslation';
 
 interface CreditCardModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
   product,
   onClose,
 }) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const checkout = useAppSelector((state) => state.checkout);
 
@@ -77,38 +79,38 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!fullName.trim()) newErrors.fullName = t.errorFullNameRequired;
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'A valid email is required';
+      newErrors.email = t.errorEmailInvalid;
     }
-    if (!phoneNumber.trim()) newErrors.phoneNumber = 'Phone number is required';
-    if (!addressLine1.trim()) newErrors.addressLine1 = 'Address line is required';
-    if (!city.trim()) newErrors.city = 'City is required';
+    if (!phoneNumber.trim()) newErrors.phoneNumber = t.errorPhoneRequired;
+    if (!addressLine1.trim()) newErrors.addressLine1 = t.errorAddressRequired;
+    if (!city.trim()) newErrors.city = t.errorCityRequired;
 
     if (!rawCardDigits || rawCardDigits.length < 13) {
-      newErrors.cardNumber = 'Card number must contain at least 13 digits';
+      newErrors.cardNumber = t.errorCardDigits;
     } else if (!validateLuhn(rawCardDigits)) {
-      newErrors.cardNumber = 'Invalid credit card number (Luhn check failed)';
+      newErrors.cardNumber = t.errorCardLuhn;
     }
 
-    if (!cardHolder.trim()) newErrors.cardHolder = 'Cardholder name is required';
+    if (!cardHolder.trim()) newErrors.cardHolder = t.errorCardHolderRequired;
 
     const [monthStr, yearStr] = expiry.split('/');
     const month = parseInt(monthStr, 10);
     if (!monthStr || !yearStr || isNaN(month) || month < 1 || month > 12 || yearStr.length < 2) {
-      newErrors.expiry = 'Valid MM/YY required';
+      newErrors.expiry = t.errorExpiryInvalid;
     }
 
     if (!cvc.trim() || cvc.length < 3 || cvc.length > 4) {
-      newErrors.cvc = 'CVC must be 3 or 4 digits';
+      newErrors.cvc = t.errorCvcInvalid;
     }
 
     if (!termsAccepted) {
-      newErrors.terms = 'You must accept the terms and conditions';
+      newErrors.terms = t.errorTermsRequired;
     }
 
     if (!personalAuthAccepted) {
-      newErrors.personalAuth = 'You must authorize personal data processing';
+      newErrors.personalAuth = t.errorPrivacyRequired;
     }
 
     setErrors(newErrors);
@@ -174,16 +176,16 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
         <div className="px-5 py-4 border-b border-zinc-800 flex items-center justify-between sticky top-0 bg-zinc-900/95 backdrop-blur-sm z-10">
           <div>
             <span className="text-[10px] font-mono tracking-wider uppercase text-zinc-400">
-              Step 2 of 4 • Checkout
+              {t.step2Subtitle}
             </span>
             <h2 id="modal-title" className="text-base font-semibold text-zinc-100">
-              Payment & Delivery
+              {t.modalTitle}
             </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close checkout modal"
+            aria-label={t.closeModalAria}
             className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/80 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,7 +203,7 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
           />
           <div className="flex-1 min-w-0">
             <h3 className="text-xs font-medium text-zinc-200 truncate">{product.name}</h3>
-            <p className="text-xs text-zinc-400 font-mono">Stock reserved: 1 unit</p>
+            <p className="text-xs text-zinc-400 font-mono">{t.stockReservedOne}</p>
           </div>
         </div>
 
@@ -210,18 +212,18 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
           {/* Customer Details */}
           <section className="space-y-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center space-x-1.5">
-              <span>1. Customer Information</span>
+              <span>{t.customerSection}</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label htmlFor="customer-fullName" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                  Full Name *
+                  {t.fullNameLabel}
                 </label>
                 <input
                   id="customer-fullName"
                   type="text"
                   required
-                  placeholder="Carlos Rodriguez"
+                  placeholder={t.fullNamePlaceholder}
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className={`w-full px-3 py-2 bg-zinc-950 border rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors ${
@@ -233,13 +235,13 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
 
               <div>
                 <label htmlFor="customer-email" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                  Email Address *
+                  {t.emailLabel}
                 </label>
                 <input
                   id="customer-email"
                   type="email"
                   required
-                  placeholder="carlos@example.com"
+                  placeholder={t.emailPlaceholder}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className={`w-full px-3 py-2 bg-zinc-950 border rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors ${
@@ -251,13 +253,13 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
 
               <div>
                 <label htmlFor="customer-phone" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                  Phone Number *
+                  {t.phoneLabel}
                 </label>
                 <input
                   id="customer-phone"
                   type="tel"
                   required
-                  placeholder="+57 300 123 4567"
+                  placeholder={t.phonePlaceholder}
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className={`w-full px-3 py-2 bg-zinc-950 border rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors ${
@@ -269,12 +271,12 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
 
               <div>
                 <label htmlFor="customer-legalId" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                  ID Number (Cédula)
+                  {t.legalIdLabel}
                 </label>
                 <input
                   id="customer-legalId"
                   type="text"
-                  placeholder="1098765432"
+                  placeholder={t.legalIdPlaceholder}
                   value={legalId}
                   onChange={(e) => setLegalId(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
@@ -286,18 +288,18 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
           {/* Delivery Details */}
           <section className="space-y-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-              2. Delivery Address
+              {t.deliverySection}
             </h3>
             <div className="space-y-3">
               <div>
                 <label htmlFor="delivery-address1" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                  Address Line 1 *
+                  {t.addressLine1Label}
                 </label>
                 <input
                   id="delivery-address1"
                   type="text"
                   required
-                  placeholder="Calle 100 # 15-20"
+                  placeholder={t.addressLine1Placeholder}
                   value={addressLine1}
                   onChange={(e) => setAddressLine1(e.target.value)}
                   className={`w-full px-3 py-2 bg-zinc-950 border rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors ${
@@ -309,12 +311,12 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
 
               <div>
                 <label htmlFor="delivery-address2" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                  Address Line 2 (Optional)
+                  {t.addressLine2Label}
                 </label>
                 <input
                   id="delivery-address2"
                   type="text"
-                  placeholder="Apto, Suite, Unidad"
+                  placeholder={t.addressLine2Placeholder}
                   value={addressLine2}
                   onChange={(e) => setAddressLine2(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
@@ -324,13 +326,13 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label htmlFor="delivery-city" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                    City *
+                    {t.cityLabel}
                   </label>
                   <input
                     id="delivery-city"
                     type="text"
                     required
-                    placeholder="Bogotá D.C."
+                    placeholder={t.cityPlaceholder}
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
@@ -338,12 +340,12 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                 </div>
                 <div>
                   <label htmlFor="delivery-region" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                    Department / Region
+                    {t.regionLabel}
                   </label>
                   <input
                     id="delivery-region"
                     type="text"
-                    placeholder="Cundinamarca"
+                    placeholder={t.regionPlaceholder}
                     value={region}
                     onChange={(e) => setRegion(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
@@ -351,12 +353,12 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                 </div>
                 <div>
                   <label htmlFor="delivery-postalCode" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                    Postal Code
+                    {t.postalCodeLabel}
                   </label>
                   <input
                     id="delivery-postalCode"
                     type="text"
-                    placeholder="110111"
+                    placeholder={t.postalCodePlaceholder}
                     value={postalCode}
                     onChange={(e) => setPostalCode(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
@@ -370,16 +372,16 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
           <section className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                3. Credit Card Information
+                {t.cardSection}
               </h3>
-              <span className="text-[10px] text-zinc-500 font-mono">Zero-PCI Client Tokenized</span>
+              <span className="text-[10px] text-zinc-500 font-mono">{t.zeroPciBadge}</span>
             </div>
 
             <div className="space-y-3">
               {/* Card Number & Brand Detection */}
               <div>
                 <label htmlFor="card-number" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                  Card Number *
+                  {t.cardNumberLabel}
                 </label>
                 <div className="relative">
                   <input
@@ -387,7 +389,7 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                     type="text"
                     required
                     inputMode="numeric"
-                    placeholder="4242 4242 4242 4242"
+                    placeholder={t.cardNumberPlaceholder}
                     value={cardNumber}
                     onChange={handleCardNumberChange}
                     maxLength={19}
@@ -425,21 +427,21 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                 {errors.cardNumber && <p className="text-[10px] text-rose-400 mt-1">{errors.cardNumber}</p>}
                 {/* Sandbox test tips */}
                 <p className="text-[10px] text-zinc-500 mt-1">
-                  Sandbox cards: <span className="font-mono text-zinc-400">4242... (Approve)</span> •{' '}
-                  <span className="font-mono text-zinc-400">4111... (Decline)</span>
+                  {t.sandboxCardsTip} <span className="font-mono text-zinc-400">{t.sandboxCardsApproved}</span> •{' '}
+                  <span className="font-mono text-zinc-400">{t.sandboxCardsDeclined}</span>
                 </p>
               </div>
 
               {/* Cardholder Name */}
               <div>
                 <label htmlFor="card-holder" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                  Cardholder Name *
+                  {t.cardHolderLabel}
                 </label>
                 <input
                   id="card-holder"
                   type="text"
                   required
-                  placeholder="CARLOS RODRIGUEZ"
+                  placeholder={t.cardHolderPlaceholder}
                   value={cardHolder}
                   onChange={(e) => setCardHolder(e.target.value.toUpperCase())}
                   className={`w-full px-3 py-2 bg-zinc-950 border rounded-lg text-xs text-zinc-100 uppercase tracking-wider focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors ${
@@ -453,13 +455,13 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label htmlFor="card-expiry" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                    Expiry *
+                    {t.expiryLabel}
                   </label>
                   <input
                     id="card-expiry"
                     type="text"
                     required
-                    placeholder="MM/YY"
+                    placeholder={t.expiryPlaceholder}
                     maxLength={5}
                     value={expiry}
                     onChange={handleExpiryChange}
@@ -472,14 +474,14 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
 
                 <div>
                   <label htmlFor="card-cvc" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                    CVC *
+                    {t.cvcLabel}
                   </label>
                   <input
                     id="card-cvc"
                     type="password"
                     required
                     maxLength={4}
-                    placeholder="•••"
+                    placeholder={t.cvcPlaceholder}
                     value={cvc}
                     onChange={(e) => setCvc(e.target.value.replace(/\D/g, ''))}
                     className={`w-full px-3 py-2 bg-zinc-950 border rounded-lg text-xs text-zinc-100 font-mono text-center tracking-widest focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors ${
@@ -491,7 +493,7 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
 
                 <div>
                   <label htmlFor="card-installments" className="text-[11px] font-medium text-zinc-300 block mb-1">
-                    Installments
+                    {t.installmentsLabel}
                   </label>
                   <select
                     id="card-installments"
@@ -501,7 +503,7 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                   >
                     {[1, 2, 3, 6, 12, 24, 36].map((n) => (
                       <option key={n} value={n}>
-                        {n} {n === 1 ? 'cuota' : 'cuotas'}
+                        {n} {n === 1 ? t.cuotaSingular : t.cuotasPlural}
                       </option>
                     ))}
                   </select>
@@ -521,16 +523,15 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                 className="mt-0.5 rounded bg-zinc-950 border-zinc-700 text-zinc-100 focus:ring-0 focus:ring-offset-0"
               />
               <span className="text-[11px] text-zinc-400 leading-tight">
-                I accept the{' '}
+                {t.termsAcceptancePart1}
                 <a
-                  href="https://wompi.co/wp-content/uploads/2019/09/TERMINOS-Y-CONDICIONES.pdf"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="#terms"
                   className="text-zinc-200 underline hover:text-white"
+                  onClick={(e) => e.preventDefault()}
                 >
-                  End User Terms and Conditions
-                </a>{' '}
-                for payment processing.
+                  {t.termsAcceptanceLink}
+                </a>
+                {t.termsAcceptancePart2}
               </span>
             </label>
             {errors.terms && <p className="text-[10px] text-rose-400">{errors.terms}</p>}
@@ -544,16 +545,15 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                 className="mt-0.5 rounded bg-zinc-950 border-zinc-700 text-zinc-100 focus:ring-0 focus:ring-offset-0"
               />
               <span className="text-[11px] text-zinc-400 leading-tight">
-                I authorize personal data processing according to the{' '}
+                {t.privacyAcceptancePart1}
                 <a
-                  href="https://wompi.com/assets/downloadble/autorizacion-datos-personales.pdf"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="#privacy"
                   className="text-zinc-200 underline hover:text-white"
+                  onClick={(e) => e.preventDefault()}
                 >
-                  Habeas Data Policy
+                  {t.privacyAcceptanceLink}
                 </a>
-                .
+                {t.privacyAcceptancePart2}
               </span>
             </label>
             {errors.personalAuth && <p className="text-[10px] text-rose-400">{errors.personalAuth}</p>}
@@ -566,14 +566,14 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
               onClick={onClose}
               className="flex-1 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 hover:bg-zinc-800/80 text-xs font-medium transition-colors"
             >
-              Cancel
+              {t.cancelBtn}
             </button>
             <button
               id="continue-to-summary-btn"
               type="submit"
               className="flex-1 py-2.5 rounded-xl bg-zinc-100 text-zinc-950 hover:bg-white text-xs font-semibold shadow-md active:scale-95 transition-all"
             >
-              Continue to Summary →
+              {t.continueToSummaryBtn}
             </button>
           </div>
         </form>

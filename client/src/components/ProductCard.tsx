@@ -1,6 +1,7 @@
 import React from 'react';
 import { Product } from '../types';
 import { formatCurrencyCOP } from '../utils/cardValidation';
+import { useTranslation } from '../i18n/useTranslation';
 
 interface ProductCardProps {
   product: Product;
@@ -8,6 +9,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) => {
+  const { t } = useTranslation();
   const isOutOfStock = product.stock <= 0;
 
   return (
@@ -25,11 +27,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
         <div className="absolute top-3 left-3">
           {isOutOfStock ? (
             <span className="px-2.5 py-1 text-[11px] font-semibold tracking-wide uppercase bg-rose-950/80 text-rose-300 border border-rose-800/50 rounded-full backdrop-blur-md">
-              Sold Out
+              {t.soldOut}
             </span>
           ) : (
             <span className="px-2.5 py-1 text-[11px] font-semibold tracking-wide uppercase bg-black/70 text-zinc-300 border border-zinc-700/50 rounded-full backdrop-blur-md">
-              Stock: {product.stock}
+              {t.stock(product.stock)}
             </span>
           )}
         </div>
@@ -48,7 +50,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
         <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between">
           <div>
             <span className="text-[10px] text-zinc-500 uppercase tracking-wider block font-mono">
-              Price
+              {t.price}
             </span>
             <span className="text-base font-bold text-zinc-50 tracking-tight">
               {formatCurrencyCOP(product.priceInCents)}
@@ -66,7 +68,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                 : 'bg-zinc-100 text-zinc-950 hover:bg-white hover:shadow-zinc-200/10'
             }`}
           >
-            <span>Pay with credit card</span>
+            <span>{t.payWithCard}</span>
             <svg
               className="w-3.5 h-3.5"
               fill="none"

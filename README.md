@@ -4,7 +4,7 @@
 [![Architecture](https://img.shields.io/badge/Architecture-Hexagonal%20|%20Ports%20%26%20Adapters-blue.svg)]()
 [![Pattern](https://img.shields.io/badge/Pattern-Railway%20Oriented%20Programming%20(ROP)-success.svg)]()
 [![Testing](https://img.shields.io/badge/Server%20Coverage-95.8%25%20Statements-brightgreen.svg)]()
-[![Testing](https://img.shields.io/badge/Client%20Coverage-87.1%25%20Statements-brightgreen.svg)]()
+[![Testing](https://img.shields.io/badge/Client%20Coverage-90.4%25%20Statements-brightgreen.svg)]()
 
 ProductPayApp is an end-to-end e-commerce product checkout application. It coordinates an interactive mobile-first customer onboarding flow with credit card tokenization, cryptographic integrity verification, idempotent transaction orchestration, and atomic inventory management.
 
@@ -75,19 +75,21 @@ Both Backend and Frontend have comprehensive test suites built with Jest, surpas
 | `modules/transactions` (Entity, Checkout Saga, Repository, Controller) | 97.1% | 89.9% | 100% | 97.0% |
 
 ### Frontend Coverage (`client/`)
-- **Statements**: **87.14%** (Threshold: 80%)
-- **Branches**: **80.69%** (Threshold: 80%)
-- **Functions**: **81.25%** (Threshold: 80%)
-- **Lines**: **87.36%** (Threshold: 80%)
-- **Test Suites**: **10 passed, 10 total** (48 unit tests)
+- **Statements**: **90.37%** (Threshold: 80%)
+- **Branches**: **82.48%** (Threshold: 80%)
+- **Functions**: **90.12%** (Threshold: 80%)
+- **Lines**: **90.82%** (Threshold: 80%)
+- **Test Suites**: **12 passed, 12 total** (59 unit tests)
 
 | Component / Utility | % Statements | % Branches | % Functions | % Lines |
 |---|:---:|:---:|:---:|:---:|
 | `Header.tsx` | 100% | 100% | 100% | 100% |
 | `ProductCard.tsx` | 100% | 100% | 100% | 100% |
-| `CreditCardModal.tsx` | 86.7% | 89.0% | 61.9% | 88.5% |
-| `SummaryBackdrop.tsx` | 94.1% | 71.4% | 100% | 100% |
-| `StatusScreen.tsx` | 100% | 75.9% | 100% | 100% |
+| `CreditCardModal.tsx` | 93.2% | 93.0% | 84.0% | 95.7% |
+| `SummaryBackdrop.tsx` | 94.7% | 71.4% | 100% | 100% |
+| `StatusScreen.tsx` | 100% | 75.8% | 100% | 100% |
+| `translations.ts` & `useTranslation.ts` (i18n) | 100% | 100% | 100% | 100% |
+| `localeSlice.ts` (Multi-language State & Persistence) | 94.7% | 80.0% | 100% | 94.7% |
 | `cardValidation.ts` (Luhn, Brand, Formatting) | 100% | 100% | 100% | 100% |
 | `checkoutSlice.ts` (Redux & localStorage) | 95.8% | 100% | 90.9% | 95.8% |
 | `catalogSlice.ts` | 100% | 100% | 100% | 100% |

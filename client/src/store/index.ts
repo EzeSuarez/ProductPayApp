@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import catalogReducer from './slices/catalogSlice';
 import checkoutReducer from './slices/checkoutSlice';
+import localeReducer from './slices/localeSlice';
 
 export const store = configureStore({
   reducer: {
     catalog: catalogReducer,
     checkout: checkoutReducer,
+    locale: localeReducer,
   },
 });
 

@@ -37,7 +37,7 @@ describe('App Component (5-Step Checkout Orchestration)', () => {
     jest.restoreAllMocks();
   });
 
-  it('should render catalog products on initial load', async () => {
+  it('should render catalog products on initial load in Spanish by default', async () => {
     render(
       <Provider store={store}>
         <App />
@@ -48,10 +48,12 @@ describe('App Component (5-Step Checkout Orchestration)', () => {
       expect(
         screen.getByText('Sony WH-1000XM5 Wireless Headphones')
       ).toBeInTheDocument();
+      expect(screen.getByText('Colección Seleccionada')).toBeInTheDocument();
+      expect(screen.getByText('Productos Destacados')).toBeInTheDocument();
     });
   });
 
-  it('should open checkout modal when Pay with credit card is clicked', async () => {
+  it('should open checkout modal when Pagar con tarjeta de crédito is clicked', async () => {
     render(
       <Provider store={store}>
         <App />
@@ -59,10 +61,29 @@ describe('App Component (5-Step Checkout Orchestration)', () => {
     );
 
     const payButton = await screen.findByRole('button', {
-      name: /Pay with credit card/i,
+      name: /Pagar con tarjeta de crédito/i,
     });
     fireEvent.click(payButton);
 
-    expect(screen.getByText(/Payment & Delivery/i)).toBeInTheDocument();
+    expect(screen.getByText(/Pago y Entrega/i)).toBeInTheDocument();
+  });
+
+  it('should dynamically switch language to English when EN toggle is clicked', async () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    const enToggle = screen.getByRole('button', { name: 'EN' });
+    fireEvent.click(enToggle);
+
+    expect(screen.getByText('Featured Products')).toBeInTheDocument();
+    expect(screen.getByText('Curated Collection')).toBeInTheDocument();
+
+    const esToggle = screen.getByRole('button', { name: 'ES' });
+    fireEvent.click(esToggle);
+
+    expect(screen.getByText('Productos Destacados')).toBeInTheDocument();
   });
 });

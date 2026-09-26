@@ -1,7 +1,27 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { ProductCard } from './ProductCard';
+import localeReducer from '../store/slices/localeSlice';
 import { Product } from '../types';
+
+const renderProductCard = (product: Product, onSelect: (p: Product) => void) => {
+  const store = configureStore({
+    reducer: {
+      locale: localeReducer,
+    },
+  });
+
+  return {
+    ...render(
+      <Provider store={store}>
+        <ProductCard product={product} onSelect={onSelect} />
+      </Provider>
+    ),
+    store,
+  };
+};
 
 describe('ProductCard Component', () => {
   const mockProduct: Product = {
@@ -13,35 +33,35 @@ describe('ProductCard Component', () => {
     imageUrl: 'https://example.com/headphones.jpg',
   };
 
-  it('should render product information and stock badge', () => {
+  it('should render product information, stock badge, and Spanish button by default', () => {
     const handleSelect = jest.fn();
-    render(<ProductCard product={mockProduct} onSelect={handleSelect} />);
+    renderProductCard(mockProduct, handleSelect);
 
     expect(screen.getByText('Sony WH-1000XM5')).toBeInTheDocument();
     expect(screen.getByText('Stock: 5')).toBeInTheDocument();
-    expect(screen.getByText('Pay with credit card')).toBeInTheDocument();
+    expect(screen.getByText('Pagar con tarjeta de crédito')).toBeInTheDocument();
   });
 
   it('should call onSelect when pay button is clicked', () => {
     const handleSelect = jest.fn();
-    render(<ProductCard product={mockProduct} onSelect={handleSelect} />);
+    renderProductCard(mockProduct, handleSelect);
 
-    const payButton = screen.getByRole('button', { name: /Pay with credit card/i });
+    const payButton = screen.getByRole('button', { name: /Pagar con tarjeta de crédito/i });
     fireEvent.click(payButton);
 
     expect(handleSelect).toHaveBeenCalledWith(mockProduct);
   });
 
-  it('should disable button and display Sold Out when stock is 0', () => {
+  it('should disable button and display Agotado when stock is 0', () => {
     const soldOutProduct: Product = {
       ...mockProduct,
       stock: 0,
     };
     const handleSelect = jest.fn();
-    render(<ProductCard product={soldOutProduct} onSelect={handleSelect} />);
+    renderProductCard(soldOutProduct, handleSelect);
 
-    expect(screen.getByText('Sold Out')).toBeInTheDocument();
-    const payButton = screen.getByRole('button', { name: /Pay with credit card/i });
+    expect(screen.getByText('Agotado')).toBeInTheDocument();
+    const payButton = screen.getByRole('button', { name: /Pagar con tarjeta de crédito/i });
     expect(payButton).toBeDisabled();
 
     fireEvent.click(payButton);

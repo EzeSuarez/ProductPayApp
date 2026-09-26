@@ -5,6 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { SummaryBackdrop } from './SummaryBackdrop';
 import checkoutReducer from '../store/slices/checkoutSlice';
 import catalogReducer from '../store/slices/catalogSlice';
+import localeReducer from '../store/slices/localeSlice';
 import { Product } from '../types';
 
 const renderWithStore = (component: React.ReactElement) => {
@@ -12,6 +13,7 @@ const renderWithStore = (component: React.ReactElement) => {
     reducer: {
       checkout: checkoutReducer,
       catalog: catalogReducer,
+      locale: localeReducer,
     },
     preloadedState: {
       checkout: {
@@ -58,16 +60,16 @@ describe('SummaryBackdrop Component', () => {
     imageUrl: 'https://example.com/watch.jpg',
   };
 
-  it('should render itemized fee breakdown and grand total', () => {
+  it('should render itemized fee breakdown and grand total in Spanish by default', () => {
     const handlePay = jest.fn();
     renderWithStore(
       <SummaryBackdrop product={mockProduct} onConfirmPayment={handlePay} isProcessing={false} />
     );
 
     expect(screen.getByText('Apple Watch Series 9')).toBeInTheDocument();
-    expect(screen.getByText('Platform Base Fee')).toBeInTheDocument();
-    expect(screen.getByText('Express Delivery Fee')).toBeInTheDocument();
-    expect(screen.getByText('Grand Total')).toBeInTheDocument();
+    expect(screen.getByText('Tarifa Base de Plataforma')).toBeInTheDocument();
+    expect(screen.getByText('Tarifa de Envío Exprés')).toBeInTheDocument();
+    expect(screen.getByText('Total a Pagar')).toBeInTheDocument();
   });
 
   it('should trigger onConfirmPayment when Confirm & Pay button is clicked', () => {
@@ -76,7 +78,7 @@ describe('SummaryBackdrop Component', () => {
       <SummaryBackdrop product={mockProduct} onConfirmPayment={handlePay} isProcessing={false} />
     );
 
-    const payBtn = screen.getByRole('button', { name: /Confirm & Pay/i });
+    const payBtn = screen.getByRole('button', { name: /Confirmar y Pagar/i });
     fireEvent.click(payBtn);
 
     expect(handlePay).toHaveBeenCalledTimes(1);
@@ -88,8 +90,8 @@ describe('SummaryBackdrop Component', () => {
       <SummaryBackdrop product={mockProduct} onConfirmPayment={handlePay} isProcessing={true} />
     );
 
-    expect(screen.getByText(/Processing Secure Payment.../i)).toBeInTheDocument();
-    const payBtn = screen.getByRole('button', { name: /Processing Secure Payment.../i });
+    expect(screen.getByText(/Procesando Pago Seguro.../i)).toBeInTheDocument();
+    const payBtn = screen.getByRole('button', { name: /Procesando Pago Seguro.../i });
     expect(payBtn).toBeDisabled();
   });
 
@@ -99,7 +101,7 @@ describe('SummaryBackdrop Component', () => {
       <SummaryBackdrop product={mockProduct} onConfirmPayment={handlePay} isProcessing={false} />
     );
 
-    const editBtn = screen.getByRole('button', { name: /Edit Info/i });
+    const editBtn = screen.getByRole('button', { name: /Editar Datos/i });
     fireEvent.click(editBtn);
 
     expect(store.getState().checkout.currentStep).toBe(2);

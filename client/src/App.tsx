@@ -18,6 +18,7 @@ import { CreditCardModal } from './components/CreditCardModal';
 import { SummaryBackdrop } from './components/SummaryBackdrop';
 import { StatusScreen } from './components/StatusScreen';
 import { Product } from './types';
+import { useTranslation } from './i18n/useTranslation';
 
 // Curated dummy products matching backend seeds
 const FALLBACK_PRODUCTS: Product[] = [
@@ -78,6 +79,7 @@ const FALLBACK_PRODUCTS: Product[] = [
 ];
 
 export const App: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const catalog = useAppSelector((state) => state.catalog);
   const checkout = useAppSelector((state) => state.checkout);
@@ -212,11 +214,11 @@ export const App: React.FC = () => {
         <main className="flex-1 px-4 py-5 space-y-5">
           <div className="space-y-1">
             <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-500">
-              Curated Collection
+              {t.curatedCollection}
             </span>
-            <h2 className="text-xl font-bold tracking-tight text-white">Featured Products</h2>
+            <h2 className="text-xl font-bold tracking-tight text-white">{t.featuredProducts}</h2>
             <p className="text-xs text-zinc-400">
-              Select an item to proceed with our secure single-step card checkout.
+              {t.catalogSubtitle}
             </p>
           </div>
 
@@ -235,7 +237,7 @@ export const App: React.FC = () => {
         {/* Footer */}
         <footer className="border-t border-zinc-800/60 p-4 text-center bg-zinc-950/40">
           <p className="text-[10px] text-zinc-500 font-mono">
-            ProductPayApp • Mobile-first Secure Checkout • Sandbox Mode
+            {t.footerText}
           </p>
         </footer>
 
