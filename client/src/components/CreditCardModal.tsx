@@ -289,9 +289,10 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                 <input
                   id="customer-legalId"
                   type="text"
+                  inputMode="numeric"
                   placeholder={t.legalIdPlaceholder}
                   value={legalId}
-                  onChange={(e) => setLegalId(e.target.value)}
+                  onChange={(e) => setLegalId(e.target.value.replace(/\D/g, ''))}
                   className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
                 />
               </div>
@@ -371,9 +372,10 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                   <input
                     id="delivery-postalCode"
                     type="text"
+                    inputMode="numeric"
                     placeholder={t.postalCodePlaceholder}
                     value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
+                    onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, ''))}
                     className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
                   />
                 </div>
