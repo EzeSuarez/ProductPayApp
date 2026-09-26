@@ -68,6 +68,7 @@ const saveStateToStorage = (state: CheckoutState) => {
   try {
     const dataToSave = {
       currentStep: state.currentStep,
+      quantity: state.quantity,
       customer: state.customer,
       delivery: state.delivery,
       termsAccepted: state.termsAccepted,

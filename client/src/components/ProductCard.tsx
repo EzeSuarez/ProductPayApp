@@ -98,9 +98,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
             </div>
           </div>
 
-          {/* Line 2: Quantity Stepper (100% width on own line) */}
           <div
-            className={`w-full flex items-center justify-between h-8 sm:h-8.5 rounded-full bg-zinc-800/90 border border-zinc-700/60 px-3 ${
+            className={`w-full flex items-center justify-between h-8.5 sm:h-9 rounded-full bg-zinc-800/90 border border-zinc-700/60 px-2 ${
               isOutOfStock ? 'opacity-40 pointer-events-none' : ''
             }`}
           >
@@ -109,17 +108,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
               aria-label={t.decreaseQuantityAria}
               disabled={isOutOfStock || quantity <= 1}
               onClick={handleDecrease}
-              className="w-6 h-6 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
+              className="w-7 h-7 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
             >
               −
             </button>
             <div className="flex items-center gap-1.5 select-none">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+              <span className="text-[11px] font-medium text-zinc-400">
                 {t.quantity}
               </span>
               <span
                 data-testid={`quantity-value-${product.id}`}
-                className="text-xs font-mono font-bold text-zinc-100 min-w-[14px] text-center"
+                className="text-[13px] font-bold text-zinc-100 min-w-[14px] text-center"
               >
                 {quantity}
               </span>
@@ -129,7 +128,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
               aria-label={t.increaseQuantityAria}
               disabled={isOutOfStock || quantity >= product.stock}
               onClick={handleIncrease}
-              className="w-6 h-6 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
+              className="w-7 h-7 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
             >
               +
             </button>
