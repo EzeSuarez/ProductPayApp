@@ -128,6 +128,12 @@ export const translations = {
     returnToStoreBtn: 'Volver a la Tienda (Paso 5: Catálogo Actualizado) →',
     backToStoreBtn: 'Volver a la Tienda',
     tryAnotherCardBtn: 'Intentar con Otra Tarjeta →',
+    orderVerifiedNotice: 'Tu pedido ha sido verificado y confirmado por la pasarela de pagos.',
+    statusApproved: 'Aprobado',
+    statusDeclined: 'Rechazado',
+    statusError: 'Error',
+    shippingAddressTitle: 'Dirección de Envío',
+    encryptedHashNotice: 'Cifrado con Hash de Integridad SHA-256 HMAC de 256 bits',
   },
   en: {
     // Header
@@ -256,6 +262,12 @@ export const translations = {
     returnToStoreBtn: 'Return to Store (Step 5: Updated Catalog) →',
     backToStoreBtn: 'Back to Store',
     tryAnotherCardBtn: 'Try Another Card →',
+    orderVerifiedNotice: 'Your order has been verified and confirmed by the payment gateway.',
+    statusApproved: 'Approved',
+    statusDeclined: 'Declined',
+    statusError: 'Error',
+    shippingAddressTitle: 'Shipping Address',
+    encryptedHashNotice: 'Encrypted with 256-bit SHA-256 HMAC Integrity Hash',
   },
 };
 

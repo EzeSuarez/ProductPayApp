@@ -6,18 +6,18 @@ const config = {
   host: '108.167.58.201',
   port: 22022,
   username: 'eze',
-  password: 'el que siempre le pone a todo',
+  password: 'cu4lqu13r4',
   readyTimeout: 99999
 };
 
 const commands = [
   'sudo apt-get update -y',
-  'sudo apt-get install -y docker.io docker-compose git',
+  'sudo apt-get install -y docker.io docker-compose-v2 git',
   'sudo systemctl start docker',
   'sudo systemctl enable docker',
   'rm -rf ProductPayApp',
   'git clone https://github.com/EzeSuarez/ProductPayApp.git',
-  'cd ProductPayApp && sudo docker-compose -f docker-compose.prod.yml up -d --build'
+  'sudo sh -c "cd ProductPayApp && docker compose -f docker-compose.prod.yml up -d --build"'
 ];
 
 conn.on('ready', () => {
