@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Production builds
+dist/
+build/
+.next/
+out/
+
+# Environment files and credentials (Zero-PCI & Security)
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Test and coverage artifacts
+coverage/
+*.lcov
+.nyc_output/
+
+# IDE and OS
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Challenge prompt PDF and internal logs (Strict Candidate Compliance)
+_docs/
+.remember/
+tmp/
+logs/
