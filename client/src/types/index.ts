@@ -7,7 +7,7 @@ export interface Product {
   imageUrl: string;
 }
 
-export type CardBrand = 'VISA' | 'MASTERCARD' | 'UNKNOWN';
+export type CardBrand = 'VISA' | 'MASTERCARD' | 'AMEX' | 'UNKNOWN';
 
 export interface CustomerData {
   fullName: string;

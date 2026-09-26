@@ -20,8 +20,11 @@ describe('cardValidation utilities', () => {
       expect(detectCardBrand('2221000000000000')).toBe('MASTERCARD');
     });
 
+    it('should detect AMEX cards', () => {
+      expect(detectCardBrand('378282246310005')).toBe('AMEX');
+    });
+
     it('should return UNKNOWN for unsupported cards or random prefixes', () => {
-      expect(detectCardBrand('378282246310005')).toBe('UNKNOWN'); // Amex
       expect(detectCardBrand('6011000000000000')).toBe('UNKNOWN'); // Discover
       expect(detectCardBrand('')).toBe('UNKNOWN');
     });

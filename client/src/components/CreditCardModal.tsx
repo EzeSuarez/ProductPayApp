@@ -432,6 +432,14 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                         <span>MC</span>
                       </span>
                     )}
+                    {cardBrand === 'AMEX' && (
+                      <span
+                        data-testid="amex-badge"
+                        className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800/60 tracking-wider"
+                      >
+                        AMEX
+                      </span>
+                    )}
                     {isLuhnValid === true && (
                       <span title="Valid card structure" className="text-emerald-400 text-xs">
                         ✓

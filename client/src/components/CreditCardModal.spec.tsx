@@ -107,7 +107,7 @@ describe('CreditCardModal Component', () => {
       <CreditCardModal isOpen={true} product={mockProduct} onClose={handleClose} />
     );
 
-    const submitBtn = screen.getByRole('button', { name: /Continuar al Resumen/i });
+    const submitBtn = screen.getByRole('button', { name: /Continuar →/i });
     fireEvent.click(submitBtn);
 
     expect(screen.getByText('El nombre completo es requerido')).toBeInTheDocument();
@@ -146,7 +146,7 @@ describe('CreditCardModal Component', () => {
       target: { value: '4111 1111 1111 1112' },
     });
 
-    const submitBtn = screen.getByRole('button', { name: /Continuar al Resumen/i });
+    const submitBtn = screen.getByRole('button', { name: /Continuar →/i });
     fireEvent.click(submitBtn);
 
     expect(
@@ -185,7 +185,7 @@ describe('CreditCardModal Component', () => {
       target: { value: '123' },
     });
 
-    const submitBtn = screen.getByRole('button', { name: /Continuar al Resumen/i });
+    const submitBtn = screen.getByRole('button', { name: /Continuar →/i });
     fireEvent.click(submitBtn);
 
     expect(store.getState().checkout.currentStep).toBe(3);
@@ -233,7 +233,7 @@ describe('CreditCardModal Component', () => {
     fireEvent.click(termsCheckbox);
     fireEvent.click(privacyCheckbox);
 
-    const submitBtn = screen.getByRole('button', { name: /Continuar al Resumen/i });
+    const submitBtn = screen.getByRole('button', { name: /Continuar →/i });
     fireEvent.click(submitBtn);
 
     expect(screen.getByText('Debes aceptar los términos y condiciones')).toBeInTheDocument();
