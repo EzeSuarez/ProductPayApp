@@ -98,97 +98,99 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
             </div>
           </div>
 
-          {/* 50 / 50 Row: Quantity Stepper & Buy Button */}
-          <div className="flex items-center gap-2 w-full">
-            {/* Quantity Stepper (50% width) */}
-            <div
-              className={`flex-1 w-1/2 flex items-center justify-between h-8.5 sm:h-9 rounded-full bg-zinc-800/90 border border-zinc-700/60 px-2 sm:px-3 ${
-                isOutOfStock ? 'opacity-40 pointer-events-none' : ''
-              }`}
+          {/* Line 2: Quantity Stepper (100% width on own line) */}
+          <div
+            className={`w-full flex items-center justify-between h-8 sm:h-8.5 rounded-full bg-zinc-800/90 border border-zinc-700/60 px-3 ${
+              isOutOfStock ? 'opacity-40 pointer-events-none' : ''
+            }`}
+          >
+            <button
+              type="button"
+              aria-label={t.decreaseQuantityAria}
+              disabled={isOutOfStock || quantity <= 1}
+              onClick={handleDecrease}
+              className="w-6 h-6 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
             >
-              <button
-                type="button"
-                aria-label={t.decreaseQuantityAria}
-                disabled={isOutOfStock || quantity <= 1}
-                onClick={handleDecrease}
-                className="w-6 h-6 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
-              >
-                −
-              </button>
+              −
+            </button>
+            <div className="flex items-center gap-1.5 select-none">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                {t.quantity}
+              </span>
               <span
                 data-testid={`quantity-value-${product.id}`}
-                className="text-xs font-mono font-semibold text-zinc-100 select-none px-1"
+                className="text-xs font-mono font-bold text-zinc-100 min-w-[14px] text-center"
               >
                 {quantity}
               </span>
-              <button
-                type="button"
-                aria-label={t.increaseQuantityAria}
-                disabled={isOutOfStock || quantity >= product.stock}
-                onClick={handleIncrease}
-                className="w-6 h-6 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
-              >
-                +
-              </button>
             </div>
-
-            {/* Buy Button (50% width) */}
             <button
-              id={`pay-button-${product.id}`}
               type="button"
-              aria-label={t.payWithCard}
-              disabled={isOutOfStock}
-              onClick={handleSelect}
-              className={`group/btn relative overflow-hidden flex-1 w-1/2 h-8.5 sm:h-9 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-semibold tracking-tight transition-all duration-300 flex items-center justify-center gap-1 shadow-sm active:scale-90 active:bg-zinc-200 ${
-                isOutOfStock
-                  ? 'bg-zinc-800/50 text-zinc-500 border border-zinc-700/30 cursor-not-allowed'
-                  : 'bg-zinc-100 text-zinc-950 hover:bg-white hover:scale-[1.03] hover:shadow-[0_0_22px_rgba(255,255,255,0.45)] cursor-pointer'
-              }`}
+              aria-label={t.increaseQuantityAria}
+              disabled={isOutOfStock || quantity >= product.stock}
+              onClick={handleIncrease}
+              className="w-6 h-6 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-bold outline-none focus:outline-none focus:ring-0"
             >
-              {/* Shimmer Light Beam Effect across the button on hover */}
-              {!isOutOfStock && (
-                <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none" />
-              )}
-
-              {/* Credit Card Icon with interactive tilt & scale on hover */}
-              <svg
-                className="w-3.5 h-3.5 shrink-0 transition-transform duration-300 group-hover/btn:-rotate-12 group-hover/btn:scale-110"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.8}
-                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                />
-              </svg>
-
-              {/* Accessible label for screen readers & tests (single unique instance) */}
-              <span className="sr-only">{t.payWithCard}</span>
-
-              {/* Visual label */}
-              <span aria-hidden="true" className="whitespace-nowrap transition-colors duration-200">
-                {t.buy}
-              </span>
-
-              {/* Micro chevron arrow with slide animation on hover */}
-              <svg
-                className="w-3 h-3 shrink-0 opacity-70 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:opacity-100"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              +
             </button>
           </div>
+
+          {/* Line 3: Buy Button (100% width on own line) */}
+          <button
+            id={`pay-button-${product.id}`}
+            type="button"
+            aria-label={t.payWithCard}
+            disabled={isOutOfStock}
+            onClick={handleSelect}
+            className={`group/btn relative overflow-hidden w-full h-8.5 sm:h-9 px-3 rounded-full text-xs font-semibold tracking-tight transition-all duration-300 flex items-center justify-center gap-1.5 shadow-sm active:scale-95 active:bg-zinc-200 ${
+              isOutOfStock
+                ? 'bg-zinc-800/50 text-zinc-500 border border-zinc-700/30 cursor-not-allowed'
+                : 'bg-zinc-100 text-zinc-950 hover:bg-white hover:scale-[1.02] hover:shadow-[0_0_22px_rgba(255,255,255,0.45)] cursor-pointer'
+            }`}
+          >
+            {/* Shimmer Light Beam Effect across the button on hover */}
+            {!isOutOfStock && (
+              <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none" />
+            )}
+
+            {/* Credit Card Icon with interactive tilt & scale on hover */}
+            <svg
+              className="w-3.5 h-3.5 shrink-0 transition-transform duration-300 group-hover/btn:-rotate-12 group-hover/btn:scale-110"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.8}
+                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+              />
+            </svg>
+
+            {/* Accessible label for screen readers & tests (single unique instance) */}
+            <span className="sr-only">{t.payWithCard}</span>
+
+            {/* Visual label */}
+            <span aria-hidden="true" className="whitespace-nowrap transition-colors duration-200">
+              {t.buy}
+            </span>
+
+            {/* Micro chevron arrow with slide animation on hover */}
+            <svg
+              className="w-3 h-3 shrink-0 opacity-70 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:opacity-100"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </article>
