@@ -83,4 +83,43 @@ describe('ProductCard Component', () => {
 
     expect(handleSelect).toHaveBeenCalledWith(mockProduct, 2);
   });
+
+  it('should allow decrementing quantity back down to 1', () => {
+    const handleSelect = jest.fn();
+    renderProductCard(mockProduct, handleSelect);
+
+    const increaseBtn = screen.getByRole('button', { name: /Aumentar cantidad/i });
+    const decreaseBtn = screen.getByRole('button', { name: /Disminuir cantidad/i });
+
+    // Increase to 2 then decrease back to 1
+    fireEvent.click(increaseBtn);
+    expect(screen.getByTestId('quantity-value-prod-test-1')).toHaveTextContent('2');
+    fireEvent.click(decreaseBtn);
+    expect(screen.getByTestId('quantity-value-prod-test-1')).toHaveTextContent('1');
+
+    // Decrease when at 1 should stay at 1
+    fireEvent.click(decreaseBtn);
+    expect(screen.getByTestId('quantity-value-prod-test-1')).toHaveTextContent('1');
+  });
+
+  it('should trigger onSelect when clicking the article container', () => {
+    const handleSelect = jest.fn();
+    renderProductCard(mockProduct, handleSelect);
+
+    const card = screen.getByTestId('product-card-prod-test-1');
+    fireEvent.click(card);
+
+    expect(handleSelect).toHaveBeenCalledWith(mockProduct);
+  });
+
+  it('should not trigger onSelect when clicking article container if out of stock', () => {
+    const soldOutProduct: Product = { ...mockProduct, stock: 0 };
+    const handleSelect = jest.fn();
+    renderProductCard(soldOutProduct, handleSelect);
+
+    const card = screen.getByTestId('product-card-prod-test-1');
+    fireEvent.click(card);
+
+    expect(handleSelect).not.toHaveBeenCalled();
+  });
 });

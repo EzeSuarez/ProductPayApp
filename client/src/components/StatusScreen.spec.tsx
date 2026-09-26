@@ -130,4 +130,20 @@ describe('StatusScreen Component', () => {
 
     expect(handleFinish).toHaveBeenCalledTimes(1);
   });
+
+  it('should render ERROR state when transaction status is ERROR', () => {
+    const handleFinish = jest.fn();
+    const errorTx: TransactionResult = {
+      id: 'tx-err-1',
+      reference: '',
+      status: 'ERROR',
+      amountInCents: 100000,
+    };
+    renderWithStore(
+      <StatusScreen product={mockProduct} onFinishCheckout={handleFinish} />,
+      errorTx
+    );
+    expect(screen.getByText('Error en el Pago')).toBeInTheDocument();
+    expect(screen.getByText('N/A')).toBeInTheDocument();
+  });
 });

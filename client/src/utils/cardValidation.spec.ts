@@ -54,7 +54,19 @@ describe('cardValidation utilities', () => {
       expect(formatCardNumber('42424')).toBe('4242 4');
     });
 
-    it('should cap at 16 digits', () => {
+    it('should format AMEX cards in 4-6-5 spacing and cap at 15 digits', () => {
+      expect(formatCardNumber('3400')).toBe('3400');
+      expect(formatCardNumber('378282')).toBe('3782 82');
+      expect(formatCardNumber('37828224631')).toBe('3782 822463 1');
+      expect(formatCardNumber('378282246310005')).toBe('3782 822463 10005');
+      expect(formatCardNumber('37828224631000599999')).toBe('3782 822463 10005');
+    });
+
+    it('should return empty string for empty input', () => {
+      expect(formatCardNumber('')).toBe('');
+    });
+
+    it('should cap at 16 digits for non-AMEX cards', () => {
       expect(formatCardNumber('12345678123456789999')).toBe('1234 5678 1234 5678');
     });
   });

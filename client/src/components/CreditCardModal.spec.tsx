@@ -251,4 +251,74 @@ describe('CreditCardModal Component', () => {
 
     expect(handleClose).toHaveBeenCalledTimes(1);
   });
+
+  it('should detect AMEX and display Amex badge when starting with 37', () => {
+    const handleClose = jest.fn();
+    renderWithStore(
+      <CreditCardModal isOpen={true} product={mockProduct} onClose={handleClose} />
+    );
+
+    const cardInput = screen.getByLabelText(/Número de Tarjeta \*/i);
+    fireEvent.change(cardInput, { target: { value: '3782 822463 10005' } });
+
+    expect(screen.getByTestId('amex-badge')).toBeInTheDocument();
+  });
+
+  it('should clear errors when typing into card number and expiry after validation failure', () => {
+    const handleClose = jest.fn();
+    renderWithStore(
+      <CreditCardModal isOpen={true} product={mockProduct} onClose={handleClose} />
+    );
+
+    const submitBtn = screen.getByRole('button', { name: /Continuar →/i });
+    fireEvent.click(submitBtn);
+
+    const cardInput = screen.getByLabelText(/Número de Tarjeta \*/i);
+    const expiryInput = screen.getByLabelText(/Vencimiento \*/i);
+
+    // Type into card input to clear error
+    fireEvent.change(cardInput, { target: { value: '4' } });
+    // Type into expiry input to clear error
+    fireEvent.change(expiryInput, { target: { value: '1' } });
+  });
+
+  it('should validate invalid email and invalid expiry date and short card number', () => {
+    const handleClose = jest.fn();
+    renderWithStore(
+      <CreditCardModal isOpen={true} product={mockProduct} onClose={handleClose} />
+    );
+
+    fireEvent.change(screen.getByLabelText(/Nombre Completo \*/i), {
+      target: { value: 'Juan Perez' },
+    });
+    fireEvent.change(screen.getByLabelText(/Correo Electrónico \*/i), {
+      target: { value: 'invalid-email' },
+    });
+    fireEvent.change(screen.getByLabelText(/Teléfono \/ Celular \*/i), {
+      target: { value: '+573001234567' },
+    });
+    fireEvent.change(screen.getByLabelText(/Dirección Línea 1 \*/i), {
+      target: { value: 'Calle 100' },
+    });
+    fireEvent.change(screen.getByLabelText(/Número de Tarjeta \*/i), {
+      target: { value: '4242' }, // < 13 digits
+    });
+    fireEvent.change(screen.getByLabelText(/Nombre en la Tarjeta \*/i), {
+      target: { value: 'JUAN PEREZ' },
+    });
+    fireEvent.change(screen.getByLabelText(/Vencimiento \*/i), {
+      target: { value: '15/28' }, // Invalid month
+    });
+    fireEvent.change(screen.getByLabelText(/CVC \*/i), {
+      target: { value: '1' }, // Too short
+    });
+
+    const submitBtn = screen.getByRole('button', { name: /Continuar →/i });
+    fireEvent.click(submitBtn);
+
+    expect(screen.getByText('Ingresa un correo electrónico válido')).toBeInTheDocument();
+    expect(screen.getByText('La tarjeta debe tener al menos 13 dígitos')).toBeInTheDocument();
+    expect(screen.getByText('Fecha MM/AA inválida')).toBeInTheDocument();
+    expect(screen.getByText('CVC debe ser de 3 o 4 dígitos')).toBeInTheDocument();
+  });
 });

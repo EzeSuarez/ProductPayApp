@@ -1,0 +1,225 @@
+{
+  "info": {
+    "name": "ProductPay API Collection",
+    "_postman_id": "productpay-api-collection-v1",
+    "description": "Comprehensive Postman collection for the ProductPay checkout and payment API following Hexagonal Architecture and ROP.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "1. List Products (Catalog & Stock)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            },
+            "description": "Retrieves the list of available store products with real-time stock units."
+          }
+        },
+        {
+          "name": "2. Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d"]
+            },
+            "description": "Retrieves single product details and current live stock count."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "1. Get Merchant Acceptance Tokens",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/merchant/acceptance",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "merchant", "acceptance"]
+            },
+            "description": "Fetches current legal and privacy acceptance tokens from sandbox gateway."
+          }
+        },
+        {
+          "name": "2. Execute Checkout Payment Saga (Approved)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d\",\n  \"quantity\": 1,\n  \"customer\": {\n    \"fullName\": \"Carlos Rodriguez\",\n    \"email\": \"carlos@example.com\",\n    \"phoneNumber\": \"+573001234567\",\n    \"legalId\": \"1098765432\"\n  },\n  \"delivery\": {\n    \"addressLine1\": \"Calle 100 # 15-20\",\n    \"addressLine2\": \"Apto 402\",\n    \"city\": \"Bogotá D.C.\",\n    \"region\": \"Cundinamarca\",\n    \"postalCode\": \"110111\"\n  },\n  \"payment\": {\n    \"cardToken\": \"tok_test_4242_approved_sample\",\n    \"installments\": 1,\n    \"acceptanceToken\": \"acceptance_token_sandbox_valid\",\n    \"acceptPersonalAuth\": \"personal_auth_sandbox_valid\",\n    \"cardBrand\": \"VISA\",\n    \"lastFour\": \"4242\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "checkout"]
+            },
+            "description": "Atomically executes the checkout saga: stock reservation, PENDING transaction creation, card charge, delivery tracking assignment."
+          }
+        },
+        {
+          "name": "3. Execute Checkout Payment Saga (Declined)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d\",\n  \"quantity\": 1,\n  \"customer\": {\n    \"fullName\": \"Maria Gomez\",\n    \"email\": \"maria@example.com\",\n    \"phoneNumber\": \"+573109876543\",\n    \"legalId\": \"52987654\"\n  },\n  \"delivery\": {\n    \"addressLine1\": \"Carrera 7 # 72-01\",\n    \"city\": \"Bogotá D.C.\",\n    \"region\": \"Cundinamarca\",\n    \"postalCode\": \"110221\"\n  },\n  \"payment\": {\n    \"cardToken\": \"tok_test_4111_declined_sample\",\n    \"installments\": 1,\n    \"acceptanceToken\": \"acceptance_token_sandbox_valid\",\n    \"acceptPersonalAuth\": \"personal_auth_sandbox_valid\",\n    \"cardBrand\": \"VISA\",\n    \"lastFour\": \"4111\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "checkout"]
+            },
+            "description": "Simulates a declined charge (e.g. card 4111), verifying that reserved stock is rolled back and transaction is marked DECLINED."
+          }
+        },
+        {
+          "name": "4. Get Transaction by Reference",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/TX-SAMPLE-REFERENCE",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "TX-SAMPLE-REFERENCE"]
+            },
+            "description": "Retrieves the status, amounts, and tracking information of a transaction by reference."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "1. Get Customer by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/sample-customer-uuid",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "sample-customer-uuid"]
+            },
+            "description": "Looks up customer records by UUID."
+          }
+        },
+        {
+          "name": "2. Get Customer by Email",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/by-email/carlos@example.com",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "by-email", "carlos@example.com"]
+            },
+            "description": "Looks up customer records by email address."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Deliveries",
+      "item": [
+        {
+          "name": "1. Get Delivery by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/deliveries/sample-delivery-uuid",
+              "host": ["{{baseUrl}}"],
+              "path": ["deliveries", "sample-delivery-uuid"]
+            },
+            "description": "Looks up delivery shipping details and assigned tracking number by UUID."
+          }
+        },
+        {
+          "name": "2. Get Deliveries by Customer ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/deliveries/by-customer/sample-customer-uuid",
+              "host": ["{{baseUrl}}"],
+              "path": ["deliveries", "by-customer", "sample-customer-uuid"]
+            },
+            "description": "Lists all delivery orders associated with a customer."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -106,4 +106,12 @@ describe('SummaryBackdrop Component', () => {
 
     expect(store.getState().checkout.currentStep).toBe(2);
   });
+
+  it('should return null when product is null', () => {
+    const handlePay = jest.fn();
+    const { container } = renderWithStore(
+      <SummaryBackdrop product={null} onConfirmPayment={handlePay} isProcessing={false} />
+    );
+    expect(container).toBeEmptyDOMElement();
+  });
 });
