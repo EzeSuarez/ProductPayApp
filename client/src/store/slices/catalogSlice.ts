@@ -8,16 +8,45 @@ export interface CatalogState {
   error: string | null;
 }
 
-const initialState: CatalogState = {
-  products: [],
-  selectedProduct: null,
-  isLoading: false,
-  error: null,
+const STORAGE_KEY = 'productpay_catalog_state_v1';
+
+const getInitialState = (): CatalogState => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return {
+        products: [],
+        selectedProduct: parsed.selectedProduct || null,
+        isLoading: false,
+        error: null,
+      };
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+  return {
+    products: [],
+    selectedProduct: null,
+    isLoading: false,
+    error: null,
+  };
+};
+
+const saveStateToStorage = (state: CatalogState) => {
+  try {
+    const dataToSave = {
+      selectedProduct: state.selectedProduct,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+  } catch {
+    // Ignore storage quota errors
+  }
 };
 
 export const catalogSlice = createSlice({
   name: 'catalog',
-  initialState,
+  initialState: getInitialState(),
   reducers: {
     setProducts: (state, action: PayloadAction<Product[]>) => {
       state.products = action.payload;
@@ -26,6 +55,7 @@ export const catalogSlice = createSlice({
     },
     setSelectedProduct: (state, action: PayloadAction<Product | null>) => {
       state.selectedProduct = action.payload;
+      saveStateToStorage(state);
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
@@ -41,6 +71,7 @@ export const catalogSlice = createSlice({
       }
       if (state.selectedProduct && state.selectedProduct.id === action.payload.productId) {
         state.selectedProduct.stock = Math.max(0, state.selectedProduct.stock - action.payload.quantity);
+        saveStateToStorage(state);
       }
     },
   },
