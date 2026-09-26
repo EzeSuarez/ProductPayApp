@@ -11,6 +11,8 @@ const config = {
 };
 
 const commands = [
+  'sudo ufw allow 80/tcp || true',
+  'sudo ufw allow 8080/tcp || true',
   'sudo apt-get update -y',
   'sudo apt-get install -y docker.io docker-compose-v2 git',
   'sudo systemctl start docker',
