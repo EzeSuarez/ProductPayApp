@@ -16,7 +16,19 @@ export const translations = {
     soldOut: 'Agotado',
     price: 'Precio',
     payWithCard: 'Pagar con tarjeta de crédito',
+    quickPay: 'Pagar',
+    buy: 'Comprar',
+    quantity: 'Cantidad',
+    decreaseQuantityAria: 'Disminuir cantidad',
+    increaseQuantityAria: 'Aumentar cantidad',
+    stockReservedN: (count: number) => `Stock reservado: ${count} ${count === 1 ? 'unidad' : 'unidades'}`,
+    qtyItemCount: (count: number) => `${count} ${count === 1 ? 'unidad' : 'unidades'}`,
     footerText: 'ProductPayApp • Pago Seguro Optimizado para Móviles • Modo Sandbox',
+
+    // Pagination
+    showingProducts: (start: number, end: number, total: number) => `Mostrando ${start}–${end} de ${total} productos`,
+    prevPage: 'Anterior',
+    nextPage: 'Siguiente',
 
     // Step 2: Modal
     step2Subtitle: 'Paso 2 de 4 • Checkout',
@@ -132,7 +144,19 @@ export const translations = {
     soldOut: 'Sold Out',
     price: 'Price',
     payWithCard: 'Pay with credit card',
+    quickPay: 'Pay',
+    buy: 'Buy Now',
+    quantity: 'Quantity',
+    decreaseQuantityAria: 'Decrease quantity',
+    increaseQuantityAria: 'Increase quantity',
+    stockReservedN: (count: number) => `Stock reserved: ${count} ${count === 1 ? 'unit' : 'units'}`,
+    qtyItemCount: (count: number) => `${count} ${count === 1 ? 'unit' : 'units'}`,
     footerText: 'ProductPayApp • Mobile-first Secure Checkout • Sandbox Mode',
+
+    // Pagination
+    showingProducts: (start: number, end: number, total: number) => `Showing ${start}–${end} of ${total} products`,
+    prevPage: 'Previous',
+    nextPage: 'Next',
 
     // Step 2: Modal
     step2Subtitle: 'Step 2 of 4 • Checkout',

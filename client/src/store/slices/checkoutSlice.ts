@@ -3,6 +3,7 @@ import { CustomerData, DeliveryData, TransactionResult } from '../../types';
 
 export interface CheckoutState {
   currentStep: 1 | 2 | 3 | 4 | 5;
+  quantity: number;
   customer: CustomerData;
   delivery: DeliveryData;
   cardBrand: string;
@@ -26,11 +27,12 @@ const getInitialState = (): CheckoutState => {
       const parsed = JSON.parse(saved);
       return {
         currentStep: parsed.currentStep || 1,
+        quantity: parsed.quantity || 1,
         customer: parsed.customer || { fullName: '', email: '', phoneNumber: '', legalId: '' },
         delivery: parsed.delivery || { addressLine1: '', addressLine2: '', city: 'Bogotá D.C.', region: 'Cundinamarca', postalCode: '110111' },
         cardBrand: parsed.cardBrand || 'UNKNOWN',
         cardLastFour: parsed.cardLastFour || '',
-        cardToken: parsed.cardToken || null,
+        cardToken: null,
         baseFeeInCents: 500000,    // 5,000 COP
         deliveryFeeInCents: 1000000, // 10,000 COP
         termsAccepted: parsed.termsAccepted ?? true,
@@ -46,6 +48,7 @@ const getInitialState = (): CheckoutState => {
 
   return {
     currentStep: 1,
+    quantity: 1,
     customer: { fullName: '', email: '', phoneNumber: '', legalId: '' },
     delivery: { addressLine1: '', addressLine2: '', city: 'Bogotá D.C.', region: 'Cundinamarca', postalCode: '110111' },
     cardBrand: 'UNKNOWN',
@@ -67,12 +70,10 @@ const saveStateToStorage = (state: CheckoutState) => {
       currentStep: state.currentStep,
       customer: state.customer,
       delivery: state.delivery,
-      cardBrand: state.cardBrand,
-      cardLastFour: state.cardLastFour,
-      cardToken: state.cardToken,
       termsAccepted: state.termsAccepted,
       personalAuthAccepted: state.personalAuthAccepted,
-      transaction: state.transaction,
+      // Payment data (cardToken, transaction result, etc.) is securely kept ONLY in application state (Redux)
+      // and NOT persisted to localStorage for security/PCI reasons.
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
   } catch {
@@ -86,6 +87,10 @@ export const checkoutSlice = createSlice({
   reducers: {
     setStep: (state, action: PayloadAction<1 | 2 | 3 | 4 | 5>) => {
       state.currentStep = action.payload;
+      saveStateToStorage(state);
+    },
+    setQuantity: (state, action: PayloadAction<number>) => {
+      state.quantity = Math.max(1, action.payload);
       saveStateToStorage(state);
     },
     updateCustomer: (state, action: PayloadAction<Partial<CustomerData>>) => {
@@ -151,6 +156,7 @@ export const checkoutSlice = createSlice({
 
 export const {
   setStep,
+  setQuantity,
   updateCustomer,
   updateDelivery,
   setCardMetadata,

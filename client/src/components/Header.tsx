@@ -9,8 +9,8 @@ export const Header: React.FC<HeaderProps> = ({ currentStep }) => {
   const { t, language, setLanguage } = useTranslation();
 
   return (
-    <header className="sticky top-0 z-30 bg-[#09090b]/90 backdrop-blur-md border-b border-zinc-800/80 px-4 py-3.5 transition-all">
-      <div className="flex items-center justify-between">
+    <header className="sticky top-0 z-30 bg-[#09090b]/90 backdrop-blur-md border-b border-zinc-800/80 transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
         <div className="flex items-center space-x-2.5">
           <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-950 font-bold text-sm tracking-tighter shadow-sm">
             PP

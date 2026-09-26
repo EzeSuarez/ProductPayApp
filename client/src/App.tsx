@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from './store';
 import {
   setProducts,
@@ -8,12 +8,14 @@ import {
 } from './store/slices/catalogSlice';
 import {
   setStep,
+  setQuantity,
   setProcessing,
   setTransactionResult,
   resetCheckout,
 } from './store/slices/checkoutSlice';
 import { Header } from './components/Header';
 import { ProductCard } from './components/ProductCard';
+import { Pagination } from './components/Pagination';
 import { CreditCardModal } from './components/CreditCardModal';
 import { SummaryBackdrop } from './components/SummaryBackdrop';
 import { StatusScreen } from './components/StatusScreen';
@@ -83,6 +85,7 @@ export const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const catalog = useAppSelector((state) => state.catalog);
   const checkout = useAppSelector((state) => state.checkout);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchCatalog = async () => {
     dispatch(setLoading(true));
@@ -105,8 +108,9 @@ export const App: React.FC = () => {
     fetchCatalog();
   }, []);
 
-  const handleSelectProduct = (product: Product) => {
+  const handleSelectProduct = (product: Product, quantity: number = 1) => {
     dispatch(setSelectedProduct(product));
+    dispatch(setQuantity(quantity));
     // Transition to Step 2: Open Credit Card & Delivery Modal
     dispatch(setStep(2));
   };
@@ -122,12 +126,13 @@ export const App: React.FC = () => {
     dispatch(setProcessing(true));
 
     const totalAmount =
-      catalog.selectedProduct.priceInCents +
+      catalog.selectedProduct.priceInCents * checkout.quantity +
       checkout.baseFeeInCents +
       checkout.deliveryFeeInCents;
 
     const payload = {
       productId: catalog.selectedProduct.id,
+      quantity: checkout.quantity,
       customer: checkout.customer,
       delivery: checkout.delivery,
       payment: {
@@ -165,7 +170,7 @@ export const App: React.FC = () => {
           dispatch(
             decrementStock({
               productId: catalog.selectedProduct.id,
-              quantity: 1,
+              quantity: checkout.quantity,
             })
           );
         }
@@ -190,7 +195,7 @@ export const App: React.FC = () => {
       dispatch(
         decrementStock({
           productId: catalog.selectedProduct.id,
-          quantity: 1,
+          quantity: checkout.quantity,
         })
       );
     }
@@ -205,66 +210,76 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col font-sans">
-      {/* Mobile-centric luxury container (iPhone SE benchmark reference: 1334x750px) */}
-      <div className="w-full max-w-md mx-auto min-h-screen border-x border-zinc-800/40 flex flex-col shadow-2xl bg-[#09090b]">
-        {/* Sticky Header */}
-        <Header currentStep={checkout.currentStep} />
+      {/* Sticky Header spanning top width */}
+      <Header currentStep={checkout.currentStep} />
 
+      {/* Main Container - Responsive for mobile, tablet, and desktop */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col">
         {/* Step 1: Catalog Content */}
-        <main className="flex-1 px-4 py-5 space-y-5">
-          <div className="space-y-1">
-            <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-500">
+        <main className="flex-1 py-6 sm:py-10 space-y-6 sm:space-y-8">
+          <div className="space-y-1.5 max-w-2xl">
+            <span className="text-[11px] font-mono tracking-widest uppercase text-zinc-500">
               {t.curatedCollection}
             </span>
-            <h2 className="text-xl font-bold tracking-tight text-white">{t.featuredProducts}</h2>
-            <p className="text-xs text-zinc-400">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">{t.featuredProducts}</h2>
+            <p className="text-xs sm:text-sm text-zinc-400">
               {t.catalogSubtitle}
             </p>
           </div>
 
-          {/* Product Grid */}
-          <div className="space-y-4">
+          {/* Product Grid: Masonry Layout (2 cols mobile, 2 cols tablet, 3 cols desktop) */}
+          <div className="columns-2 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 lg:gap-8 space-y-4 sm:space-y-6 lg:space-y-8">
             {catalog.products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onSelect={handleSelectProduct}
-              />
+              <div key={product.id} className="break-inside-avoid">
+                <ProductCard
+                  product={product}
+                  onSelect={handleSelectProduct}
+                />
+              </div>
             ))}
           </div>
+
+          {/* Dummy Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={3}
+            totalItems={18}
+            itemsPerPage={6}
+            onPageChange={setCurrentPage}
+          />
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-800/60 p-4 text-center bg-zinc-950/40">
-          <p className="text-[10px] text-zinc-500 font-mono">
+        <footer className="border-t border-zinc-800/60 py-6 text-center">
+          <p className="text-xs text-zinc-500 font-mono">
             {t.footerText}
           </p>
         </footer>
-
-        {/* Step 2: Credit Card & Customer Delivery Modal */}
-        <CreditCardModal
-          isOpen={checkout.currentStep === 2}
-          product={catalog.selectedProduct}
-          onClose={handleCloseModal}
-        />
-
-        {/* Step 3: Material Design Summary Backdrop */}
-        {checkout.currentStep === 3 && (
-          <SummaryBackdrop
-            product={catalog.selectedProduct}
-            onConfirmPayment={handleConfirmPayment}
-            isProcessing={checkout.isProcessing}
-          />
-        )}
-
-        {/* Step 4: Final Status Screen */}
-        {checkout.currentStep === 4 && (
-          <StatusScreen
-            product={catalog.selectedProduct}
-            onFinishCheckout={handleFinishCheckout}
-          />
-        )}
       </div>
+
+      {/* Step 2: Credit Card & Customer Delivery Modal */}
+      <CreditCardModal
+        isOpen={checkout.currentStep === 2}
+        product={catalog.selectedProduct}
+        onClose={handleCloseModal}
+      />
+
+      {/* Step 3: Material Design Summary Backdrop */}
+      {checkout.currentStep === 3 && (
+        <SummaryBackdrop
+          product={catalog.selectedProduct}
+          onConfirmPayment={handleConfirmPayment}
+          isProcessing={checkout.isProcessing}
+        />
+      )}
+
+      {/* Step 4: Final Status Screen */}
+      {checkout.currentStep === 4 && (
+        <StatusScreen
+          product={catalog.selectedProduct}
+          onFinishCheckout={handleFinishCheckout}
+        />
+      )}
     </div>
   );
 };

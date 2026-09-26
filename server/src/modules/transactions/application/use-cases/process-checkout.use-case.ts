@@ -64,23 +64,25 @@ export class ProcessCheckoutUseCase {
   async execute(
     dto: ProcessCheckoutDto
   ): Promise<Result<CheckoutResultDto, DomainError>> {
+    const quantity = dto.quantity && dto.quantity > 0 ? dto.quantity : 1;
+
     // 1. Verify product availability
     const product = await this.productRepository.findById(dto.productId);
     if (!product) {
       return Result.fail(new EntityNotFoundError('Product', dto.productId));
     }
 
-    if (product.stock <= 0) {
-      return Result.fail(new InsufficientStockError(product.id, 1, 0));
+    if (product.stock < quantity) {
+      return Result.fail(new InsufficientStockError(product.id, quantity, product.stock));
     }
 
     // 2. Reserve stock atomically
     const stockReserved = await this.productRepository.decrementStockAtomic(
       product.id,
-      1
+      quantity
     );
     if (!stockReserved) {
-      return Result.fail(new InsufficientStockError(product.id, 1, product.stock));
+      return Result.fail(new InsufficientStockError(product.id, quantity, product.stock));
     }
 
     let customer: Customer;
@@ -119,7 +121,7 @@ export class ProcessCheckoutUseCase {
       await this.deliveryRepository.save(delivery);
 
       // 5. Calculate transaction amounts & create PENDING transaction
-      const productAmount = product.priceInCents;
+      const productAmount = product.priceInCents * quantity;
       const baseFee = ProcessCheckoutUseCase.BASE_FEE_IN_CENTS;
       const deliveryFee = ProcessCheckoutUseCase.DELIVERY_FEE_IN_CENTS;
       const totalAmount = productAmount + baseFee + deliveryFee;
@@ -158,7 +160,7 @@ export class ProcessCheckoutUseCase {
       // 7. Process Gateway Response & Handle Saga Outcomes
       if (chargeResult.isFail) {
         // Gateway rejected or timed out: Rollback stock reservation
-        await this.productRepository.incrementStock(product.id, 1);
+        await this.productRepository.incrementStock(product.id, quantity);
         transaction.markDeclined(chargeResult.error.message);
         await this.transactionRepository.save(transaction);
 
@@ -199,7 +201,7 @@ export class ProcessCheckoutUseCase {
         });
       } else if (payment.status === 'DECLINED') {
         // Gateway card declined: Rollback stock
-        await this.productRepository.incrementStock(product.id, 1);
+        await this.productRepository.incrementStock(product.id, quantity);
         transaction.markDeclined('Card was declined by issuing bank');
         await this.transactionRepository.save(transaction);
 
@@ -217,7 +219,7 @@ export class ProcessCheckoutUseCase {
         });
       } else {
         // Gateway error: Rollback stock
-        await this.productRepository.incrementStock(product.id, 1);
+        await this.productRepository.incrementStock(product.id, quantity);
         transaction.markError(`Gateway status: ${payment.status}`);
         await this.transactionRepository.save(transaction);
 
@@ -237,7 +239,7 @@ export class ProcessCheckoutUseCase {
     } catch (err: any) {
       // Saga Compensation on unhandled failure
       this.logger.error(`Critical error during checkout saga: ${err.message}`, err.stack);
-      await this.productRepository.incrementStock(product.id, 1);
+      await this.productRepository.incrementStock(product.id, quantity);
       return Result.fail(
         new CheckoutError(
           err.message || 'An unexpected error occurred during checkout processing.'

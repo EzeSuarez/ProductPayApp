@@ -12,6 +12,7 @@ import {
   validateLuhn,
   formatCardNumber,
   formatExpiry,
+  formatCurrencyCOP,
 } from '../utils/cardValidation';
 import { Product } from '../types';
 import { useTranslation } from '../i18n/useTranslation';
@@ -203,7 +204,19 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
           />
           <div className="flex-1 min-w-0">
             <h3 className="text-xs font-medium text-zinc-200 truncate">{product.name}</h3>
-            <p className="text-xs text-zinc-400 font-mono">{t.stockReservedOne}</p>
+            <p className="text-xs text-zinc-400 font-mono">
+              {checkout.quantity > 1 ? t.stockReservedN(checkout.quantity) : t.stockReservedOne}
+            </p>
+          </div>
+          <div className="text-right">
+            <span className="text-xs font-bold text-zinc-100 font-mono block">
+              {formatCurrencyCOP(product.priceInCents * checkout.quantity)}
+            </span>
+            {checkout.quantity > 1 && (
+              <span className="text-[10px] text-zinc-500 font-mono block">
+                {checkout.quantity} × {formatCurrencyCOP(product.priceInCents)}
+              </span>
+            )}
           </div>
         </div>
 
@@ -323,8 +336,8 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
-                <div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div className="col-span-2 sm:col-span-1">
                   <label htmlFor="delivery-city" className="text-[11px] font-medium text-zinc-300 block mb-1">
                     {t.cityLabel}
                   </label>
@@ -338,7 +351,7 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                     className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
                   />
                 </div>
-                <div>
+                <div className="col-span-1">
                   <label htmlFor="delivery-region" className="text-[11px] font-medium text-zinc-300 block mb-1">
                     {t.regionLabel}
                   </label>
@@ -351,7 +364,7 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
                     className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 transition-colors"
                   />
                 </div>
-                <div>
+                <div className="col-span-1">
                   <label htmlFor="delivery-postalCode" className="text-[11px] font-medium text-zinc-300 block mb-1">
                     {t.postalCodeLabel}
                   </label>
@@ -370,11 +383,11 @@ export const CreditCardModal: React.FC<CreditCardModalProps> = ({
 
           {/* Credit Card Information */}
           <section className="space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-1.5">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
                 {t.cardSection}
               </h3>
-              <span className="text-[10px] text-zinc-500 font-mono">{t.zeroPciBadge}</span>
+              <span className="text-[10px] text-zinc-500 font-mono shrink-0">{t.zeroPciBadge}</span>
             </div>
 
             <div className="space-y-3">

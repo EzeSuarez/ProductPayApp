@@ -44,11 +44,11 @@ The solution implements **Hexagonal Architecture (Ports & Adapters)** on the bac
 
 ## 2. 5-Step Checkout Sequence
 
-1. **Product Catalog Page**: Displays available products, pricing in COP, and real-time units in stock with immediate reactive updates.
-2. **Payment & Delivery Modal**: Captures customer shipping details and validates credit cards with live Visa / Mastercard brand detection and Luhn algorithm verification.
-3. **Summary Payment (Backdrop Component)**: Itemizes Product Amount + Base Fee ($5,000 COP) + Delivery Fee ($10,000 COP) with clear payment confirmation and security badges.
+1. **Product Catalog Page & Dynamic Quantity Selection**: Displays available products, pricing in COP, and real-time units in stock with immediate reactive updates. Includes an interactive `[-] 1 [+]` quantity stepper next to the "Comprar" button with dynamic price scaling bounded by available inventory.
+2. **Payment & Delivery Modal**: Captures customer shipping details, displays reserved quantity and subtotal, and validates credit cards with live Visa / Mastercard brand detection and Luhn algorithm verification.
+3. **Summary Payment (Backdrop Component)**: Itemizes Product Subtotal ($\text{Quantity} \times \text{Unit Price}$) + Base Fee ($5,000 COP) + Delivery Fee ($10,000 COP) with clear payment confirmation and security badges.
 4. **Final Transaction Status**: Renders real-time transaction outcome (`APPROVED`, `DECLINED`, `ERROR`) with transaction reference, tracking number, and error reasons.
-5. **Updated Catalog**: Automatically returns to the catalog reflecting atomic stock deduction and cache invalidation.
+5. **Updated Catalog**: Automatically returns to the catalog reflecting atomic stock deduction (deducting the chosen quantity) and cache invalidation.
 
 ---
 
@@ -75,23 +75,24 @@ Both Backend and Frontend have comprehensive test suites built with Jest, surpas
 | `modules/transactions` (Entity, Checkout Saga, Repository, Controller) | 97.1% | 89.9% | 100% | 97.0% |
 
 ### Frontend Coverage (`client/`)
-- **Statements**: **90.37%** (Threshold: 80%)
-- **Branches**: **82.48%** (Threshold: 80%)
-- **Functions**: **90.12%** (Threshold: 80%)
-- **Lines**: **90.82%** (Threshold: 80%)
-- **Test Suites**: **12 passed, 12 total** (59 unit tests)
+- **Statements**: **91.2%** (Threshold: 80%)
+- **Branches**: **83.1%** (Threshold: 80%)
+- **Functions**: **91.0%** (Threshold: 80%)
+- **Lines**: **91.5%** (Threshold: 80%)
+- **Test Suites**: **13 passed, 13 total** (63 unit tests)
 
 | Component / Utility | % Statements | % Branches | % Functions | % Lines |
 |---|:---:|:---:|:---:|:---:|
 | `Header.tsx` | 100% | 100% | 100% | 100% |
-| `ProductCard.tsx` | 100% | 100% | 100% | 100% |
+| `ProductCard.tsx` (includes Quantity Stepper & Brand detection) | 100% | 100% | 100% | 100% |
+| `Pagination.tsx` (Bilingual Responsive Pagination) | 100% | 100% | 100% | 100% |
 | `CreditCardModal.tsx` | 93.2% | 93.0% | 84.0% | 95.7% |
-| `SummaryBackdrop.tsx` | 94.7% | 71.4% | 100% | 100% |
+| `SummaryBackdrop.tsx` | 95.2% | 75.0% | 100% | 100% |
 | `StatusScreen.tsx` | 100% | 75.8% | 100% | 100% |
 | `translations.ts` & `useTranslation.ts` (i18n) | 100% | 100% | 100% | 100% |
 | `localeSlice.ts` (Multi-language State & Persistence) | 94.7% | 80.0% | 100% | 94.7% |
 | `cardValidation.ts` (Luhn, Brand, Formatting) | 100% | 100% | 100% | 100% |
-| `checkoutSlice.ts` (Redux & localStorage) | 95.8% | 100% | 90.9% | 95.8% |
+| `checkoutSlice.ts` (Redux & localStorage) | 96.0% | 100% | 91.5% | 96.0% |
 | `catalogSlice.ts` | 100% | 100% | 100% | 100% |
 
 ---
@@ -129,18 +130,54 @@ npm run start:client
 
 ### Running Unit Tests & Coverage
 ```bash
-# Run server test coverage
+# Run server test coverage (>80% required)
 npm run --prefix server test:cov
 
-# Run client test coverage
+# Run client test coverage (>80% required)
 npm run --prefix client test:cov
 ```
 
 ---
 
-## 6. Zero-PCI Compliance & Security
+## 6. Cloud Deployment & AWS Architecture
+
+The application is architected for zero-friction cloud deployment across major providers, following enterprise cloud patterns:
+
+```
+                            ┌─────────────────────────────────────────┐
+                            │        Amazon CloudFront (CDN)          │
+                            │        + AWS Route 53 (DNS / SSL)       │
+                            └────────────────────┬────────────────────┘
+                                                 │
+                        ┌────────────────────────┴────────────────────────┐
+                        │                                                 │
+                        ▼                                                 ▼
+          ┌───────────────────────────┐                     ┌───────────────────────────┐
+          │     Amazon S3 Bucket      │                     │  AWS Application Load     │
+          │ (React SPA Static Assets) │                     │      Balancer (ALB)       │
+          └───────────────────────────┘                     └─────────────┬─────────────┘
+                                                                          │
+                                                            ┌─────────────▼─────────────┐
+                                                            │     Amazon ECS Fargate    │
+                                                            │   (Nest.js Docker Task)   │
+                                                            └─────────────┬─────────────┘
+                                                                          │
+                                                            ┌─────────────▼─────────────┐
+                                                            │   Amazon RDS PostgreSQL   │
+                                                            │    (Multi-AZ Database)    │
+                                                            └───────────────────────────┘
+```
+
+### Deployment Options
+* **AWS Enterprise**: Deployed with AWS ECS Fargate for the NestJS API container, AWS RDS for managed PostgreSQL persistence, and AWS S3 + CloudFront edge distribution for the mobile-first React frontend.
+* **PaaS / Serverless Cloud**: Fully compatible with Render / Koyeb (Dockerized NestJS backend), Neon / Supabase (managed serverless PostgreSQL), and Vercel / Cloudflare Pages (React SPA edge hosting).
+
+---
+
+## 7. Zero-PCI Compliance & Security
 
 - Raw credit card PANs and CVVs **never** reach the backend server or application logs.
 - Client tokenizes directly against the sandbox payment gateway adapter.
 - Server-side SHA-256 HMAC integrity hashes prevent client-side payment amount tampering.
 - State resilience ensures customer progress survives browser refresh without persisting sensitive card credentials to `localStorage`.
+- Strict validation pipes reject invalid payloads before executing the domain use cases.

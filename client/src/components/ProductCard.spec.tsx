@@ -67,4 +67,20 @@ describe('ProductCard Component', () => {
     fireEvent.click(payButton);
     expect(handleSelect).not.toHaveBeenCalled();
   });
+
+  it('should allow incrementing quantity and pass selected quantity to onSelect', () => {
+    const handleSelect = jest.fn();
+    renderProductCard(mockProduct, handleSelect);
+
+    const increaseBtn = screen.getByRole('button', { name: /Aumentar cantidad/i });
+    fireEvent.click(increaseBtn);
+
+    const quantityDisplay = screen.getByTestId('quantity-value-prod-test-1');
+    expect(quantityDisplay).toHaveTextContent('2');
+
+    const payButton = screen.getByRole('button', { name: /Pagar con tarjeta de crédito/i });
+    fireEvent.click(payButton);
+
+    expect(handleSelect).toHaveBeenCalledWith(mockProduct, 2);
+  });
 });

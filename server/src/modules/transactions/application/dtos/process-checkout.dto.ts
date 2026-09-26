@@ -80,6 +80,11 @@ export class ProcessCheckoutDto {
   @IsUUID()
   productId!: string;
 
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  quantity?: number = 1;
+
   @ValidateNested()
   @Type(() => CustomerInfoDto)
   customer!: CustomerInfoDto;

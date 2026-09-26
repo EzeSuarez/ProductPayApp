@@ -22,10 +22,12 @@ export const SummaryBackdrop: React.FC<SummaryBackdropProps> = ({
 
   if (!product) return null;
 
+  const quantity = checkout.quantity || 1;
   const productPrice = product.priceInCents;
+  const productSubtotal = productPrice * quantity;
   const baseFee = checkout.baseFeeInCents;
   const deliveryFee = checkout.deliveryFeeInCents;
-  const grandTotal = productPrice + baseFee + deliveryFee;
+  const grandTotal = productSubtotal + baseFee + deliveryFee;
 
   return (
     <div
@@ -63,9 +65,11 @@ export const SummaryBackdrop: React.FC<SummaryBackdropProps> = ({
             />
             <div className="flex-1 min-w-0">
               <h3 className="text-xs font-semibold text-zinc-100 truncate">{product.name}</h3>
-              <p className="text-[11px] text-zinc-400 font-mono">{t.qtyOneItem}</p>
+              <p className="text-[11px] text-zinc-400 font-mono">
+                {quantity > 1 ? t.qtyItemCount(quantity) : t.qtyOneItem}
+              </p>
               <p className="text-xs font-medium text-zinc-300 mt-0.5">
-                {formatCurrencyCOP(productPrice)}
+                {formatCurrencyCOP(productSubtotal)}
               </p>
             </div>
           </div>
@@ -74,7 +78,7 @@ export const SummaryBackdrop: React.FC<SummaryBackdropProps> = ({
           <div className="space-y-2 text-xs">
             <div className="flex justify-between text-zinc-400">
               <span>{t.subtotalProduct}</span>
-              <span className="font-mono text-zinc-200">{formatCurrencyCOP(productPrice)}</span>
+              <span className="font-mono text-zinc-200">{formatCurrencyCOP(productSubtotal)}</span>
             </div>
             <div className="flex justify-between text-zinc-400">
               <span className="flex items-center space-x-1">
