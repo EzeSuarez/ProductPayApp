@@ -38,8 +38,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
     <article
       data-testid={`product-card-${product.id}`}
       onClick={handleSelect}
-      className={`group relative bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-800/80 hover:border-zinc-700/80 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between cursor-pointer active:scale-[0.99] backdrop-blur-sm ${
-        isOutOfStock ? 'opacity-75 cursor-not-allowed' : ''
+      className={`group relative bg-zinc-900/50 hover:bg-zinc-900/90 border border-zinc-800/80 hover:border-zinc-600/50 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md hover:shadow-[0_16px_40px_rgba(0,0,0,0.7)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer active:scale-[0.99] backdrop-blur-sm ${
+        isOutOfStock ? 'opacity-75 cursor-not-allowed hover:translate-y-0 hover:border-zinc-800/80' : ''
       }`}
     >
       {/* Product Image Stage */}
@@ -61,7 +61,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
               {t.soldOut}
             </span>
           ) : (
-            <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-mono tracking-wide bg-zinc-950/70 text-zinc-300 border border-white/10 rounded-full backdrop-blur-md flex items-center gap-1.5 shadow-sm">
+            <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-mono tracking-wide bg-zinc-950/70 text-zinc-300 border border-white/10 rounded-full backdrop-blur-md flex items-center gap-1.5 shadow-sm group-hover:border-emerald-500/40 transition-colors">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
               {t.stock(product.stock)}
             </span>
@@ -110,7 +110,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                 aria-label={t.decreaseQuantityAria}
                 disabled={isOutOfStock || quantity <= 1}
                 onClick={handleDecrease}
-                className="w-4.5 h-4.5 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs font-bold outline-none focus:outline-none focus:ring-0"
+                className="w-4.5 h-4.5 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-xs font-bold outline-none focus:outline-none focus:ring-0"
               >
                 −
               </button>
@@ -125,28 +125,33 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                 aria-label={t.increaseQuantityAria}
                 disabled={isOutOfStock || quantity >= product.stock}
                 onClick={handleIncrease}
-                className="w-4.5 h-4.5 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs font-bold outline-none focus:outline-none focus:ring-0"
+                className="w-4.5 h-4.5 rounded-full flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/80 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-xs font-bold outline-none focus:outline-none focus:ring-0"
               >
                 +
               </button>
             </div>
 
-            {/* Buy Button */}
+            {/* Buy Button with Shimmer, Tilt, Glow & Click Effect */}
             <button
               id={`pay-button-${product.id}`}
               type="button"
               aria-label={t.payWithCard}
               disabled={isOutOfStock}
               onClick={handleSelect}
-              className={`flex-1 h-8 sm:h-8.5 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-semibold tracking-tight transition-all duration-200 flex items-center justify-center gap-1 shadow-sm active:scale-95 ${
+              className={`group/btn relative overflow-hidden flex-1 h-8 sm:h-8.5 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-semibold tracking-tight transition-all duration-300 flex items-center justify-center gap-1 shadow-sm active:scale-90 active:bg-zinc-200 ${
                 isOutOfStock
                   ? 'bg-zinc-800/50 text-zinc-500 border border-zinc-700/30 cursor-not-allowed'
-                  : 'bg-zinc-100 text-zinc-950 hover:bg-white hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]'
+                  : 'bg-zinc-100 text-zinc-950 hover:bg-white hover:scale-[1.03] hover:shadow-[0_0_22px_rgba(255,255,255,0.45)] cursor-pointer'
               }`}
             >
-              {/* Credit Card Icon */}
+              {/* Shimmer Light Beam Effect across the button on hover */}
+              {!isOutOfStock && (
+                <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none" />
+              )}
+
+              {/* Credit Card Icon with interactive tilt & scale on hover */}
               <svg
-                className="w-3.5 h-3.5 shrink-0"
+                className="w-3.5 h-3.5 shrink-0 transition-transform duration-300 group-hover/btn:-rotate-12 group-hover/btn:scale-110"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -163,13 +168,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
               <span className="sr-only">{t.payWithCard}</span>
 
               {/* Visual label */}
-              <span aria-hidden="true" className="whitespace-nowrap">
+              <span aria-hidden="true" className="whitespace-nowrap transition-colors duration-200">
                 {t.buy}
               </span>
 
-              {/* Micro chevron arrow */}
+              {/* Micro chevron arrow with slide animation on hover */}
               <svg
-                className="w-3 h-3 shrink-0 opacity-70 group-hover:translate-x-0.5 transition-transform"
+                className="w-3 h-3 shrink-0 opacity-70 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:opacity-100"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
