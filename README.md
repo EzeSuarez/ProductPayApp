@@ -7,6 +7,10 @@
 [![Testing](https://img.shields.io/badge/Client%20Coverage-94.9%25%20Statements-brightgreen.svg)]()
 [![Zero-PCI](https://img.shields.io/badge/Security-Zero--PCI%20Compliant-emerald.svg)]()
 
+<p align="center">
+  <img src="docs/ProductPlay.gif" alt="ProductPayApp Onboarding & Checkout Demo" width="450" />
+</p>
+
 ProductPayApp is an enterprise-grade e-commerce checkout application built with **React 18 (SPA)**, **Nest.js**, and **PostgreSQL**. It delivers a mobile-first, resilient 5-step customer onboarding flow featuring real-time card brand detection (Visa, Mastercard, AMEX), cryptographic integrity verification, idempotent transaction orchestration, and atomic inventory management.
 
 ---
