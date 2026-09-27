@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from './database/database.module';
 import { ProductsModule } from './modules/products/products.module';
@@ -20,6 +22,10 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
         limit: 100,
       },
     ]),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'client', 'dist'),
+      exclude: ['/api/(.*)'],
+    }),
     DatabaseModule,
     ProductsModule,
     CustomersModule,

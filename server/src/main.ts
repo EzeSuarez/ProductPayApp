@@ -9,8 +9,8 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
 
-  // OWASP Security: HTTP headers
-  app.use(helmet());
+  // OWASP Security: HTTP headers (disable CSP for HTTP deployment)
+  app.use(helmet({ contentSecurityPolicy: false }));
 
   // CORS
   app.enableCors({
@@ -48,8 +48,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
+  const port = process.env.PORT || 21000;
+  await app.listen(port, '0.0.0.0');
   logger.log(`Server running on: http://localhost:${port}/api`);
   logger.log(`Swagger Documentation: http://localhost:${port}/api/docs`);
 }

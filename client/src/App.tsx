@@ -34,7 +34,13 @@ export const App: React.FC = () => {
     dispatch(setLoading(true));
     dispatch(setError(null));
     try {
-      const response = await fetch('/api/products');
+      const response = await fetch('/api/products', {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache'
+        },
+        cache: 'no-store'
+      });
       if (response.ok) {
         const json = await response.json();
         if (json.data && Array.isArray(json.data) && json.data.length > 0) {

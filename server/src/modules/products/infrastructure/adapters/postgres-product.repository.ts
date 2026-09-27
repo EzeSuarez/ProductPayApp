@@ -107,7 +107,8 @@ export class PostgresProductRepository implements ProductRepositoryPort {
       if (res.rowCount && res.rowCount > 0) {
         return true;
       }
-    } catch {
+    } catch (err) {
+      this.logger.error(`PostgreSQL query failed in decrementStockAtomic: ${err.message}`);
       this.logger.debug('PostgreSQL query unavailable, performing atomic in-memory decrement');
     }
 

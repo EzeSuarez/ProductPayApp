@@ -15,9 +15,10 @@ ProductPayApp is an enterprise-grade e-commerce checkout application built with 
 
 | Resource | URL / Reference | Description |
 |---|---|---|
-| **Live Web App (SPA)** | [https://tender-moose-knock.loca.lt](https://tender-moose-knock.loca.lt) | Mobile-first responsive checkout application |
-| **Public Swagger API Docs** | [https://tender-moose-knock.loca.lt/api/docs](https://tender-moose-knock.loca.lt/api/docs) | Interactive OpenAPI 3.0 documentation & testing sandbox |
-| **Local Swagger API Docs** | `http://localhost:3000/api/docs` | Local development Swagger UI |
+| **Live Web App (SPA)** | `http://108.167.58.201:21000` | Mobile-first responsive checkout application |
+| **Public Swagger API Docs** | `http://108.167.58.201:21000/api/docs` | Interactive OpenAPI 3.0 documentation & testing sandbox |
+| **API Health & Products** | `http://108.167.58.201:21000/api/products` | Direct API endpoint to verify backend health and stock |
+| **Local Swagger API Docs** | `http://localhost:21000/api/docs` | Local development Swagger UI |
 | **Postman Collection** | [`postman_collection.json`](file:///e:/www/ProductPayApp/postman_collection.json) | Full Postman collection covering all REST endpoints |
 | **GitHub Repository** | Public Git Repository (`ProductPayApp`) | Source code with Hexagonal Architecture and ROP |
 
@@ -124,7 +125,7 @@ erDiagram
 The backend exposes RESTful endpoints for all four core entities with OpenAPI 3.0 documentation:
 
 ### Public Swagger UI
-Navigate to `http://localhost:3000/api/docs` (or via public cloud URL: `/api/docs`).
+Navigate to `http://localhost:21000/api/docs` (or via public cloud URL: `/api/docs`).
 
 ### Endpoints Table
 
@@ -254,7 +255,7 @@ Use the following fake credit card numbers during checkout evaluation:
 # 1. Start PostgreSQL database with seed products
 docker-compose up -d
 
-# 2. Start Nest.js Backend Server (Port 3000)
+# 2. Start Nest.js Backend Server (Port 21000)
 npm run start:server
 
 # 3. Start React Client SPA (Port 5173)

@@ -13,6 +13,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   const [quantity, setQuantity] = useState(1);
   const isOutOfStock = product.stock <= 0;
 
+  React.useEffect(() => {
+    setQuantity(1);
+  }, [product.stock]);
+
   const handleDecrease = (e: React.MouseEvent) => {
     e.stopPropagation();
     setQuantity((prev) => Math.max(1, prev - 1));
