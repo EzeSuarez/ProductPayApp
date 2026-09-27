@@ -77,7 +77,8 @@ export class PaymentInfoDto {
 }
 
 export class ProcessCheckoutDto {
-  @IsUUID()
+  @IsString()
+  @IsNotEmpty()
   productId!: string;
 
   @IsOptional()

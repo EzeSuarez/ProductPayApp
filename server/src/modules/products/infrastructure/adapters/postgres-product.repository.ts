@@ -21,7 +21,7 @@ const INITIAL_SEED_PRODUCTS = [
     imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
   },
   {
-    id: 'c3d4e5f6-a7b8-4c7d-0e1f-2a3b4c5d6e7f',
+    id: 'c3d4e5f6-a7b8-4c7d-8e1f-2a3b4c5d6e7f',
     name: 'Minimalist Leather Travel Backpack (Matte Black)',
     description: 'Water-resistant full-grain leather, padded 16-inch laptop compartment, and ergonomic shoulder straps.',
     priceInCents: 38000000,
@@ -29,7 +29,7 @@ const INITIAL_SEED_PRODUCTS = [
     imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80',
   },
   {
-    id: 'd4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a',
+    id: 'd4e5f6a7-b8c9-4d0e-8f2a-3b4c5d6e7f8a',
     name: 'Keychron K2 Pro Mechanical Keyboard',
     description: 'Wireless QMK/VIA custom mechanical keyboard, RGB backlighting, hot-swappable switches, sound-absorbing foam.',
     priceInCents: 52000000,
@@ -37,7 +37,7 @@ const INITIAL_SEED_PRODUCTS = [
     imageUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&q=80',
   },
   {
-    id: 'e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b',
+    id: 'e5f6a7b8-c9d0-4e1f-8a3b-4c5d6e7f8a9b',
     name: 'Fujifilm X100V Digital Camera (Silver & Black)',
     description: '26.1MP APS-C X-Trans BSI CMOS sensor, fixed 23mm f/2 lens, hybrid optical/electronic viewfinder, 4K video.',
     priceInCents: 689000000,
@@ -45,7 +45,7 @@ const INITIAL_SEED_PRODUCTS = [
     imageUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80',
   },
   {
-    id: 'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c',
+    id: 'f6a7b8c9-d0e1-4f2a-8b4c-5d6e7f8a9b0c',
     name: 'Hario V60 Ceramic Drip Set (Monochrome Edition)',
     description: 'Classic pour-over brewer with heatproof glass server, measurement scale, and ergonomic kettle spout.',
     priceInCents: 19500000,
