@@ -15,10 +15,10 @@ ProductPayApp is an enterprise-grade e-commerce checkout application built with 
 
 | Resource | URL / Reference | Description |
 |---|---|---|
-| **Live Web App (SPA)** | `http://108.167.58.201:21000` | Mobile-first responsive checkout application |
-| **Public Swagger API Docs** | `http://108.167.58.201:21000/api/docs` | Interactive OpenAPI 3.0 documentation & testing sandbox |
-| **API Health & Products** | `http://108.167.58.201:21000/api/products` | Direct API endpoint to verify backend health and stock |
-| **Local Swagger API Docs** | `http://localhost:21000/api/docs` | Local development Swagger UI |
+| **Live Web App (SPA)** | [http://108.167.58.201:21000](http://108.167.58.201:21000) | Mobile-first responsive checkout application |
+| **Public Swagger API Docs** | [http://108.167.58.201:21000/api/docs](http://108.167.58.201:21000/api/docs) | Interactive OpenAPI 3.0 documentation & testing sandbox |
+| **API Health & Products** | [http://108.167.58.201:21000/api/products](http://108.167.58.201:21000/api/products) | Direct API endpoint to verify backend health and stock |
+| **Local Swagger API Docs** | [http://localhost:21000/api/docs](http://localhost:21000/api/docs) | Local development Swagger UI |
 | **Postman Collection** | [`postman_collection.json`](file:///e:/www/ProductPayApp/postman_collection.json) | Full Postman collection covering all REST endpoints |
 | **GitHub Repository** | Public Git Repository (`ProductPayApp`) | Source code with Hexagonal Architecture and ROP |
 
