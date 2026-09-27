@@ -4,6 +4,7 @@ import {
   setProducts,
   setSelectedProduct,
   setLoading,
+  setError,
   decrementStock,
 } from './store/slices/catalogSlice';
 import {
@@ -22,64 +23,6 @@ import { StatusScreen } from './components/StatusScreen';
 import { Product } from './types';
 import { useTranslation } from './i18n/useTranslation';
 
-// Curated dummy products matching backend seeds
-const FALLBACK_PRODUCTS: Product[] = [
-  {
-    id: 'a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d',
-    name: 'Sony WH-1000XM5 Wireless Headphones (Midnight Black)',
-    description:
-      'Industry-leading noise canceling with Auto NC Optimizer, crystal clear hands-free calling, and 30-hour battery life.',
-    priceInCents: 145000000,
-    stock: 12,
-    imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
-  },
-  {
-    id: 'b2c3d4e5-f6a7-4b6c-9d0e-1f2a3b4c5d6e',
-    name: 'Apple Watch Series 9 GPS 45mm (Space Black)',
-    description:
-      'Smarter, brighter, and mightier. Double tap gesture, S9 SiP chip, and advanced health sensors.',
-    priceInCents: 215000000,
-    stock: 8,
-    imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
-  },
-  {
-    id: 'c3d4e5f6-a7b8-4c7d-0e1f-2a3b4c5d6e7f',
-    name: 'Minimalist Leather Travel Backpack (Matte Black)',
-    description:
-      'Water-resistant full-grain leather, padded 16-inch laptop compartment, and ergonomic shoulder straps.',
-    priceInCents: 38000000,
-    stock: 25,
-    imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80',
-  },
-  {
-    id: 'd4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a',
-    name: 'Keychron K2 Pro Mechanical Keyboard',
-    description:
-      'Wireless QMK/VIA custom mechanical keyboard, RGB backlighting, hot-swappable switches, sound-absorbing foam.',
-    priceInCents: 52000000,
-    stock: 15,
-    imageUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&q=80',
-  },
-  {
-    id: 'e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b',
-    name: 'Fujifilm X100V Digital Camera (Silver & Black)',
-    description:
-      '26.1MP APS-C X-Trans BSI CMOS sensor, fixed 23mm f/2 lens, hybrid optical/electronic viewfinder, 4K video.',
-    priceInCents: 689000000,
-    stock: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80',
-  },
-  {
-    id: 'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c',
-    name: 'Hario V60 Ceramic Drip Set (Monochrome Edition)',
-    description:
-      'Classic pour-over brewer with heatproof glass server, measurement scale, and ergonomic kettle spout.',
-    priceInCents: 19500000,
-    stock: 30,
-    imageUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&q=80',
-  },
-];
-
 export const App: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -89,6 +32,7 @@ export const App: React.FC = () => {
 
   const fetchCatalog = async () => {
     dispatch(setLoading(true));
+    dispatch(setError(null));
     try {
       const response = await fetch('/api/products');
       if (response.ok) {
@@ -98,10 +42,10 @@ export const App: React.FC = () => {
           return;
         }
       }
+      dispatch(setError(t.errorLoadingCatalog));
     } catch {
-      // Backend not yet running or network unavailable in standalone test
+      dispatch(setError(t.errorLoadingCatalog));
     }
-    dispatch(setProducts(FALLBACK_PRODUCTS));
   };
 
   useEffect(() => {
@@ -227,26 +171,62 @@ export const App: React.FC = () => {
             </p>
           </div>
 
-          {/* Product Grid: Masonry Layout (2 cols mobile, 2 cols tablet, 3 cols desktop) */}
-          <div className="columns-2 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 lg:gap-8 space-y-4 sm:space-y-6 lg:space-y-8">
-            {catalog.products.map((product) => (
-              <div key={product.id} className="break-inside-avoid">
-                <ProductCard
-                  product={product}
-                  onSelect={handleSelectProduct}
-                />
-              </div>
-            ))}
-          </div>
+          {/* Loading Skeleton */}
+          {catalog.isLoading && (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 animate-pulse">
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <div key={n} className="bg-zinc-900/40 border border-zinc-800/60 rounded-2xl p-4 h-72 flex flex-col justify-between">
+                  <div className="bg-zinc-800/50 rounded-xl aspect-square w-full" />
+                  <div className="space-y-2 mt-3">
+                    <div className="bg-zinc-800/60 h-4 rounded w-3/4" />
+                    <div className="bg-zinc-800/40 h-3 rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
-          {/* Dummy Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={3}
-            totalItems={18}
-            itemsPerPage={6}
-            onPageChange={setCurrentPage}
-          />
+          {/* Error State with Retry Button */}
+          {!catalog.isLoading && catalog.error && (
+            <div role="alert" className="p-8 my-6 text-center border border-rose-900/50 bg-rose-950/20 rounded-2xl backdrop-blur-sm max-w-md mx-auto space-y-4">
+              <div className="w-12 h-12 rounded-full bg-rose-900/40 text-rose-400 flex items-center justify-center mx-auto text-xl font-bold">
+                !
+              </div>
+              <p className="text-sm text-rose-200">{catalog.error}</p>
+              <button
+                type="button"
+                onClick={fetchCatalog}
+                className="px-5 py-2 text-xs font-semibold text-zinc-100 bg-zinc-800 hover:bg-zinc-700 rounded-full transition-all border border-zinc-700 shadow-sm"
+              >
+                {t.retryCatalog}
+              </button>
+            </div>
+          )}
+
+          {/* Product Grid & Pagination */}
+          {!catalog.isLoading && !catalog.error && (
+            <>
+              <div className="columns-2 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 lg:gap-8 space-y-4 sm:space-y-6 lg:space-y-8">
+                {catalog.products.map((product) => (
+                  <div key={product.id} className="break-inside-avoid">
+                    <ProductCard
+                      product={product}
+                      onSelect={handleSelectProduct}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Dummy Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={3}
+                totalItems={18}
+                itemsPerPage={6}
+                onPageChange={setCurrentPage}
+              />
+            </>
+          )}
         </main>
 
         {/* Footer */}

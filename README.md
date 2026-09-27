@@ -4,7 +4,7 @@
 [![Architecture](https://img.shields.io/badge/Architecture-Hexagonal%20|%20Ports%20%26%20Adapters-blue.svg)]()
 [![Pattern](https://img.shields.io/badge/Pattern-Railway%20Oriented%20Programming%20(ROP)-success.svg)]()
 [![Testing](https://img.shields.io/badge/Server%20Coverage-96.1%25%20Statements-brightgreen.svg)]()
-[![Testing](https://img.shields.io/badge/Client%20Coverage-95.3%25%20Statements-brightgreen.svg)]()
+[![Testing](https://img.shields.io/badge/Client%20Coverage-94.9%25%20Statements-brightgreen.svg)]()
 [![Zero-PCI](https://img.shields.io/badge/Security-Zero--PCI%20Compliant-emerald.svg)]()
 
 ProductPayApp is an enterprise-grade e-commerce checkout application built with **React 18 (SPA)**, **Nest.js**, and **PostgreSQL**. It delivers a mobile-first, resilient 5-step customer onboarding flow featuring real-time card brand detection (Visa, Mastercard, AMEX), cryptographic integrity verification, idempotent transaction orchestration, and atomic inventory management.
@@ -200,10 +200,10 @@ Both Backend and Frontend test suites exceed the required 80% coverage mark acro
 | `modules/transactions` (Entity, Checkout Saga, Repository, Controller) | 97.1% | 89.9% | 100% | 97.0% |
 
 ### Frontend Coverage (`client/`)
-- **Statements**: **95.33%** (Threshold: 80%)
-- **Branches**: **85.03%** (Threshold: 80%)
-- **Functions**: **91.26%** (Threshold: 80%)
-- **Lines**: **95.30%** (Threshold: 80%)
+- **Statements**: **94.91%** (Threshold: 80%)
+- **Branches**: **85.10%** (Threshold: 80%)
+- **Functions**: **90.38%** (Threshold: 80%)
+- **Lines**: **94.84%** (Threshold: 80%)
 - **Test Suites**: **13 passed, 13 total** (76 unit tests)
 
 | Component / Utility | % Statements | % Branches | % Functions | % Lines |

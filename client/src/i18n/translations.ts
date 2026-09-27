@@ -23,6 +23,9 @@ export const translations = {
     increaseQuantityAria: 'Aumentar cantidad',
     stockReservedN: (count: number) => `Stock reservado: ${count} ${count === 1 ? 'unidad' : 'unidades'}`,
     qtyItemCount: (count: number) => `${count} ${count === 1 ? 'unidad' : 'unidades'}`,
+    loadingCatalog: 'Cargando productos de la tienda...',
+    errorLoadingCatalog: 'No se pudo cargar el catálogo de productos desde el servidor.',
+    retryCatalog: 'Reintentar',
     footerText: 'ProductPayApp • Pago Seguro Optimizado para Móviles • Modo Sandbox',
 
     // Pagination
@@ -157,6 +160,9 @@ export const translations = {
     increaseQuantityAria: 'Increase quantity',
     stockReservedN: (count: number) => `Stock reserved: ${count} ${count === 1 ? 'unit' : 'units'}`,
     qtyItemCount: (count: number) => `${count} ${count === 1 ? 'unit' : 'units'}`,
+    loadingCatalog: 'Loading store products...',
+    errorLoadingCatalog: 'Could not load product catalog from server.',
+    retryCatalog: 'Retry',
     footerText: 'ProductPayApp • Mobile-first Secure Checkout • Sandbox Mode',
 
     // Pagination

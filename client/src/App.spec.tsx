@@ -87,7 +87,7 @@ describe('App Component (5-Step Checkout Orchestration)', () => {
     expect(screen.getByText('Productos Destacados')).toBeInTheDocument();
   });
 
-  it('should fallback to FALLBACK_PRODUCTS if fetch fails', async () => {
+  it('should display error state and allow retrying when catalog fetch fails', async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
 
     render(
@@ -97,7 +97,34 @@ describe('App Component (5-Step Checkout Orchestration)', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Sony WH-1000XM5 Wireless Headphones (Midnight Black)')).toBeInTheDocument();
+      expect(
+        screen.getByText('No se pudo cargar el catálogo de productos desde el servidor.')
+      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Reintentar' })).toBeInTheDocument();
+    });
+
+    // Mock successful fetch on retry
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          data: [
+            {
+              id: 'test-p1',
+              name: 'Sony WH-1000XM5 Wireless Headphones',
+              description: 'Noise canceling headphones',
+              priceInCents: 145000000,
+              stock: 10,
+              imageUrl: 'https://example.com/headphones.jpg',
+            },
+          ],
+        }),
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('product-card-test-p1')).toBeInTheDocument();
     });
   });
 
